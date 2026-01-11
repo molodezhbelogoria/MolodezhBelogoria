@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Геймификация - MolodezhBelogoria</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <span class="material-symbols-outlined menu-icon">menu</span>
+            <div class="logo-container">
+                <div class="logo-text">
+                    <img src="logo.svg" alt="Логотип Молодежь Белогорья" class="logo-img">
+                </div>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="search-box">
+                <div class="search-input-wrapper">
+                    <input type="text" placeholder="Поиск мероприятий..." id="search-input">
+                    <span class="material-symbols-outlined keyboard-icon">keyboard</span>
+                </div>
+                <button class="search-btn" id="search-btn">
+                    <span class="material-symbols-outlined">search</span>
+                </button>
+                <button class="mic-btn">
+                    <span class="material-symbols-outlined">mic</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div class="gamification-btn active" id="gamification-btn">
+                <div class="gamification-score">
+                    <span class="material-symbols-outlined">stars</span>
+                    <span id="user-score">1250</span>
+                    <span class="user-level" id="user-level">Лидер</span>
+                </div>
+            </div>
+            
+            <div class="create-btn" id="create-application-btn">
+                <span class="material-symbols-outlined" style="font-size: 22px;">add</span>
+                Заявка
+            </div>
+            
+            <div class="icon-btn notification-btn">
+                <span class="material-symbols-outlined">notifications</span>
+                <span class="notification-badge">3</span>
+            </div>
+            <div class="avatar" id="user-avatar">M</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside>
+            <div class="sidebar-section">
+                <a href="index.html" class="sidebar-link" id="nav-home">
+                    <span class="material-symbols-outlined">home</span>
+                    Главная
+                </a>
+                <a href="#" class="sidebar-link" id="nav-success">
+                    <span class="material-symbols-outlined">emoji_events</span>
+                    Истории успеха
+                </a>
+                <a href="gamification.html" class="sidebar-link active" id="nav-leaders">
+                    <span class="material-symbols-outlined">military_tech</span>
+                    Список лидеров
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">Направления</div>
+                <a href="#" class="sidebar-link dir-praktikuisya" data-direction="praktikuisya">
+                    <span class="material-symbols-outlined">model_training</span>
+                    Практикуйся
+                </a>
+                <a href="#" class="sidebar-link dir-pobezhdaj" data-direction="pobezhdaj">
+                    <span class="material-symbols-outlined">workspace_premium</span>
+                    Побеждай
+                </a>
+                <a href="#" class="sidebar-link dir-sport" data-direction="sport">
+                    <span class="material-symbols-outlined">sports_basketball</span>
+                    Спорт
+                </a>
+                <a href="#" class="sidebar-link dir-vdohnovlyajsya" data-direction="vdohnovlyajsya">
+                    <span class="material-symbols-outlined">auto_awesome</span>
+                    Вдохновляйся
+                </a>
+                <a href="#" class="sidebar-link dir-razvivajsya" data-direction="razvivajsya">
+                    <span class="material-symbols-outlined">lightbulb</span>
+                    Развивайся
+                </a>
+                <a href="#" class="sidebar-link dir-bud-priznan" data-direction="bud-priznan">
+                    <span class="material-symbols-outlined">stars</span>
+                    Будь признан
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <a href="profile.html" class="sidebar-link" id="nav-profile">
+                    <span class="material-symbols-outlined">account_circle</span>
+                    Профиль
+                </a>
+                <a href="#" class="sidebar-link" id="nav-applications">
+                    <span class="material-symbols-outlined">description</span>
+                    Мои заявки
+                </a>
+                <a href="#" class="sidebar-link" id="nav-projects">
+                    <span class="material-symbols-outlined">account_tree</span>
+                    Мои проекты
+                </a>
+                <a href="#" class="sidebar-link" id="nav-favorites">
+                    <span class="material-symbols-outlined">favorite</span>
+                    Избранное
+                </a>
+            </div>
+        </aside>
+
+        <main id="main-content">
+            <div class="gamification-page">
+                <div class="gamification-header">
+                    <h1>Ваш прогресс</h1>
+                    <button class="back-btn" onclick="window.location.href='index.html'">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                        Назад
+                    </button>
+                </div>
+
+                <div class="gamification-content">
+                    <div class="gamification-stats">
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-points">1250</div>
+                            <div class="stat-label">Общий балл</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="current-level">7</div>
+                            <div class="stat-label">Уровень</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="achievements-count">12</div>
+                            <div class="stat-label">Достижения</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="rank-position">15</div>
+                            <div class="stat-label">Место в рейтинге</div>
+                        </div>
+                    </div>
+
+                    <div class="progress-section">
+                        <h3>Прогресс до следующего уровня</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="level-progress" style="width: 75%"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>Лидер (1250/1500)</span>
+                            <span>Эксперт →</span>
+                        </div>
+                    </div>
+
+                    <div class="achievements-section">
+                        <h3>Ваши достижения</h3>
+                        <div class="achievements-grid" id="achievements-list">
+                            <!-- Достижения будут загружены через JS -->
+                        </div>
+                    </div>
+
+                    <div class="points-history">
+                        <h3>История начисления баллов</h3>
+                        <div class="history-list" id="points-history">
+                            <!-- История будет загружена через JS -->
+                        </div>
+                    </div>
+
+                    <div class="leaderboard-section">
+                        <h3>Топ-10 лидеров</h3>
+                        <div class="leaderboard" id="leaderboard">
+                            <!-- Таблица лидеров будет загружена через JS -->
+                        </div>
+                    </div>
+
+                    <div class="exchange-section">
+                        <h3>Обмен баллов</h3>
+                        <div class="exchange-options">
+                            <div class="exchange-card" data-cost="500">
+                                <div class="exchange-icon">
+                                    <span class="material-symbols-outlined">card_giftcard</span>
+                                </div>
+                                <div class="exchange-content">
+                                    <h4>Сертификат в книжный магазин</h4>
+                                    <p>500 баллов</p>
+                                    <button class="exchange-btn">Обменять</button>
+                                </div>
+                            </div>
+                            <div class="exchange-card" data-cost="1000">
+                                <div class="exchange-icon">
+                                    <span class="material-symbols-outlined">sports_esports</span>
+                                </div>
+                                <div class="exchange-content">
+                                    <h4>Билет на киносеанс</h4>
+                                    <p>1000 баллов</p>
+                                    <button class="exchange-btn">Обменять</button>
+                                </div>
+                            </div>
+                            <div class="exchange-card" data-cost="1500">
+                                <div class="exchange-icon">
+                                    <span class="material-symbols-outlined">confirmation_number</span>
+                                </div>
+                                <div class="exchange-content">
+                                    <h4>Билет на концерт</h4>
+                                    <p>1500 баллов</p>
+                                    <button class="exchange-btn">Обменять</button>
+                                </div>
+                            </div>
+                            <div class="exchange-card" data-cost="2000">
+                                <div class="exchange-icon">
+                                    <span class="material-symbols-outlined">flight_takeoff</span>
+                                </div>
+                                <div class="exchange-content">
+                                    <h4>Путешествие по области</h4>
+                                    <p>2000 баллов</p>
+                                    <button class="exchange-btn">Обменять</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>

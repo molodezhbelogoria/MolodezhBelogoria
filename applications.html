@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Молодежь Белогорья</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Специфичные стили для страницы заявок */
+        .applications-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .applications-title {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--text-main);
+            font-family: 'Oswald', sans-serif;
+        }
+        
+        .applications-count {
+            color: var(--text-secondary);
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .filters-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid var(--separator);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+        
+        .filter-select {
+            width: 100%;
+            padding: 10px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23606060' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .search-filter {
+            flex: 2;
+            min-width: 300px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 10px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .reset-filters {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        
+        .reset-filters:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .applications-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .application-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--separator);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .application-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            border-color: var(--primary-light);
+        }
+        
+        .application-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            background: var(--bg-light);
+            border-bottom: 1px solid var(--separator);
+        }
+        
+        .application-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+        
+        .application-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .application-date {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .application-card-body {
+            padding: 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+        }
+        
+        .application-info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .info-item-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        
+        .info-item-value {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+        
+        .info-item-value a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .info-item-value a:hover {
+            text-decoration: underline;
+        }
+        
+        .application-card-footer {
+            padding: 16px 24px;
+            background: var(--bg-light);
+            border-top: 1px solid var(--separator);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .application-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        
+        .action-btn.primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+        }
+        
+        .action-btn.primary:hover {
+            background: #0052a3;
+        }
+        
+        .action-btn.secondary {
+            background: white;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+        
+        .action-btn.secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .action-btn.danger {
+            background: white;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+        
+        .action-btn.danger:hover {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .status-pending {
+            background: #FFF3CD;
+            color: #856404;
+        }
+        
+        .status-approved {
+            background: #D1ECF1;
+            color: #0C5460;
+        }
+        
+        .status-rejected {
+            background: #F8D7DA;
+            color: #721C24;
+        }
+        
+        .status-awaiting {
+            background: #E2E3E5;
+            color: #383D41;
+        }
+        
+        .status-completed {
+            background: #D4EDDA;
+            color: #155724;
+        }
+        
+        .status-cancelled {
+            background: #F5F5F5;
+            color: #6C757D;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 12px;
+            border: 2px dashed var(--separator);
+        }
+        
+        .empty-state .material-symbols-outlined {
+            font-size: 64px;
+            margin-bottom: 16px;
+            color: var(--separator);
+        }
+        
+        .empty-state h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+        
+        .empty-state p {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--separator);
+        }
+        
+        .page-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: white;
+            color: var(--text-main);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .page-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .page-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .page-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-item {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border: 1px solid var(--separator);
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .stat-icon.pending {
+            background: #FFF3CD;
+            color: #856404;
+        }
+        
+        .stat-icon.approved {
+            background: #D1ECF1;
+            color: #0C5460;
+        }
+        
+        .stat-icon.rejected {
+            background: #F8D7DA;
+            color: #721C24;
+        }
+        
+        .stat-icon.total {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .stat-content {
+            flex: 1;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--text-main);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--separator);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        
+        .modal-body {
+            padding: 24px;
+        }
+        
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--separator);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 992px) {
+            .application-card-body {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .application-card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            
+            .filter-row {
+                flex-direction: column;
+            }
+            
+            .filter-group, .search-filter {
+                width: 100%;
+                min-width: auto;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .applications-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .application-card-footer {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+            
+            .application-actions {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+            
+            .action-btn {
+                flex: 1;
+                min-width: 140px;
+                justify-content: center;
+            }
+            
+            .stats-summary {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <span class="material-symbols-outlined menu-icon">menu</span>
+            <div class="logo-container" onclick="window.location.href='index.html'">
+                <div class="logo-text">
+                    <img src="logo.svg" alt="Логотип Молодежь Белогорья" class="logo-img">
+                </div>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="search-box">
+                <div class="search-input-wrapper">
+                    <input type="text" placeholder="Введите запрос">
+                    <span class="material-symbols-outlined" style="color: #606060; font-size: 20px; cursor: pointer; margin-right: 8px;">keyboard</span>
+                </div>
+                <button class="search-btn">
+                    <span class="material-symbols-outlined">search</span>
+                </button>
+                <button class="mic-btn">
+                    <span class="material-symbols-outlined">mic</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <span class="material-symbols-outlined" style="cursor: pointer; color: #606060;">notifications</span>
+            <div class="avatar">A</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside>
+            <div class="sidebar-section">
+                <a href="index.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">home</span>
+                    Главная
+                </a>
+                <a href="success-stories.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">emoji_events</span> Истории успеха
+                </a>
+                <a href="leaderboard.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">military_tech</span>
+                    Список лидеров
+                </a>
+            </div>
+
+            
+
+
+            <div class="sidebar-section">
+                <a href="profile.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">account_circle</span>
+                    Профиль
+                </a>
+                <a href="applications.html" class="sidebar-link active">
+                    <span class="material-symbols-outlined">description</span>
+                    Заявки
+                </a>
+                <a href="projects.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">account_tree</span>
+                    Мои проекты
+                </a>
+                <a href="points-exchange.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">redeem</span>
+                    Обмен баллов
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">Навигатор</div>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">theater_comedy</span>
+                    Культурные мероприятия
+                </a>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">fitness_center</span>
+                    Спорт
+                </a>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">school</span>
+                    ДПО организации
+                </a>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">explore</span>
+                    Возможности самореализации
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">Другие возможности</div>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined" style="color: #00ff11;">smart_toy</span>
+                    Ai куратор
+                </a>
+                <a href="searching.html" class="sidebar-link">
+                    <span class="material-symbols-outlined" style="color: #0055ff;">group_add</span>
+                    Найти команду в проект
+                </a>
+                    <a href="searchnastavnik.html" class="sidebar-link">
+                    <span class="material-symbols-outlined" style="color: #ff00aa;">group_add</span>
+                    Найти наставника
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">settings</span>
+                    Настройки
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">help_outline</span>
+                    Справка
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">mail</span>
+                    Связаться с нами
+                </a>
+            </div>
+
+            <div class="sidebar-section no-border">
+                <div class="footer-links">
+                    <a href="#">О проекте</a>
+                    <a href="#">Направления</a>
+                    <a href="#">Связаться с нами</a>
+                    <a href="#">Организация</a>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Условия</a>
+                    <a href="#">Конфиденциальность</a>
+                </div>
+                <div class="copyright">
+                    © 2026 MolodezhBelogoria
+                </div>
+            </div>
+        </aside>
+
+        <main style="background-color: #f9f9f9; padding: 24px;">
+            <div class="applications-header">
+                <div>
+                    <h1 class="applications-title">Мои заявки</h1>
+                    <p class="applications-count">Всего заявок: <span id="totalApplications">8</span></p>
+                </div>
+            </div>
+
+            <div class="filters-container">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label class="filter-label">Статус заявки</label>
+                        <select class="filter-select" id="statusFilter">
+                            <option value="all">Все статусы</option>
+                            <option value="pending">На рассмотрении</option>
+                            <option value="approved">Одобрено</option>
+                            <option value="rejected">Отклонено</option>
+                            <option value="awaiting">Ожидает подтверждения</option>
+                            <option value="completed">Завершено</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Тип мероприятия</label>
+                        <select class="filter-select" id="typeFilter">
+                            <option value="all">Все типы</option>
+                            <option value="forum">Форумы</option>
+                            <option value="competition">Конкурсы</option>
+                            <option value="grant">Гранты</option>
+                            <option value="sport">Спортивные</option>
+                            <option value="education">Образовательные</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Период</label>
+                        <select class="filter-select" id="periodFilter">
+                            <option value="all">За всё время</option>
+                            <option value="month">За этот месяц</option>
+                            <option value="3months">За 3 месяца</option>
+                            <option value="year">За этот год</option>
+                        </select>
+                    </div>
+                    
+                    <div class="search-filter">
+                        <label class="filter-label">Поиск по названию</label>
+                        <input type="text" class="search-input" id="searchInput" placeholder="Введите название мероприятия...">
+                    </div>
+                </div>
+                
+                <div class="filter-row" style="margin-top: 16px; justify-content: space-between;">
+                    <button class="reset-filters" onclick="resetFilters()">
+                        <span class="material-symbols-outlined">refresh</span>
+                        Сбросить фильтры
+                    </button>
+                    
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 14px; color: var(--text-secondary);">Показано:</span>
+                        <select class="filter-select" style="width: auto;" id="pageSize">
+                            <option value="5">5 заявок</option>
+                            <option value="10" selected>10 заявок</option>
+                            <option value="20">20 заявок</option>
+                            <option value="50">50 заявок</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="applications-grid" id="applicationsList">
+                <!-- Заявка 1 -->
+                <div class="application-card" data-status="approved" data-type="forum">
+                    <div class="application-card-header">
+                        <div>
+                            <div class="application-title">Всероссийский форум «ШУМ.Производство» — 2026</div>
+                            <div class="application-subtitle">Форум для молодых медийщиков и создателей контента</div>
+                        </div>
+                        <div class="application-date">Подана: 15.03.2025</div>
+                    </div>
+                    
+                    <div class="application-card-body">
+                        <div class="application-info-item">
+                            <div class="info-item-label">Статус</div>
+                            <div class="info-item-value">
+                                <span class="status-badge status-approved">
+                                    <span class="material-symbols-outlined" style="font-size: 14px;">check_circle</span>
+                                    Одобрено
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="application-info-item">
+                            <div class="info-item-label">Мероприятие</div>
+                            <div class="info-item-value">
+                                <a href="event-details.html" style="color: var(--primary);">Форум «ШУМ» 2026</a>
+                            </div>
+                        </div>
+                        
+                        <div class="application-info-item">
+                            <div class="info-item-label">Даты проведения</div>
+                            <div class="info-item-value">12-16 августа 2026</div>
+                        </div>
+                        
+                        <div class="application-info-item">
+                            <div class="info-item-label">Номер заявки</div>
+                            <div class="info-item-value">#APP-2025-01573</div>
+                        </div>
+                        
+                        <div class="application-info-item">
+                            <div class="info-item-label">Направление</div>
+                            <div class="info-item-value">
+                                <span class="event-tag tag-dir pobeda">Побеждай</span>
+                            </div>
+                        </div>
+                        
+                        <div class="application-info-item">
+                            <div class="info-item-label">Организатор</div>
+                            <div class="info-item-value">Росмолодёжь</div>
+                        </div>
+                    </div>
+                    
+                    <div class="application-card-footer">
+                        <div>
+                            <span style="font-size: 14px; color: var(--text-secondary);">Ответ получен: 25.03.2025</span>
+                        </div>
+                        <div class="application-actions">
+                            <button class="action-btn primary" onclick="viewApplicationDetails(1)">
+                                <span class="material-symbols-outlined">visibility</span>
+                                Просмотр
+                            </button>
+                            <button class="action-btn secondary">
+                                <span class="material-symbols-outlined">download</span>
+                                Скачать
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Заявка 2 -->
+                <div class="application-card" data-status="pending" data-type="grant">
+                    <div class="application-card-header">
+                        <div>
+                            <div class="application-title">Грантовый конкурс «Твой ход» 2025</div>
+                            <div class="application-subtitle">Конкурс на реализацию социальных проектов</div>
+                        </div>
+                        <div class="application-date">Подана: 10.04.2025</div>
+                    </div>
+                    
+                    <div class="application-card-body">
+                        <div class="application-info-item">
+                            <div class="info-item-label">Статус</div>
+                            <div class="info-item-value">
+                                <span class="status-badge status-pending">
+                                    <span class="material-symbols-outlined" style="font-size: 14px;">schedule</span>
+                                    На рассмотрении
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="application-info-item">
+                            <div class="info-item-label">Мероприятие</div>
+                            <div class="info-item-value">
+                                <a href="event-details.html" style="color: var(--primary);">«Твой ход» 2025</a>
+                            </div>
+                        </div>
+                        
+                        <div class="application-info-item">
+                            <div class="info-item-label">Даты проведения</div>
+                            <div class="info-item-value">Июнь - Октябрь 2025</div>
+                        </div>
+                        
+                        <div class="application-info-item">
+                            <div class="info-item-label">Номер заявки</div>
+                            <div class="info-item-value">#APP-2025-01842</div>
+                        </div>
+                        
+                        <div class="application-info-item">
+                            <div class="info-item-label">Направление</div>
+                            <div class="info-item-value">
+                                <span class="event-tag tag-dir razvitie">Развивайся</span>
+                            </div>
+                        </div>
+                        
+                        <div class="application-info-item">
+                            <div class="info-item-label">Сумма гранта</div>
+                            <div class="info-item-value">500 000 ₽</div>
+                        </div>
+                    </div>
+                    
+                    <div class="application-card-footer">
+                        <div>
+                            <span style="font-size: 14px; color: var(--text-secondary);">Ожидаемый ответ: до 15.05.2025</span>
+                        </div>
+                        <div class="application-actions">
+                            <button class="action-btn primary" onclick="viewApplicationDetails(2)">
+                                <span class="material-symbols-outlined">visibility</span>
+                                Просмотр
+                            </button>
+                            <button class="action-btn secondary" onclick="cancelApplication(2)">
+                                <span class="material-symbols-outlined">close</span>
+                                Отменить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Заявка 3 -->
+                <div class="application-card" data-status="rejected" data-type="competition">
+                    <div class="application-card-header">
+                        <div>
+                            <div class="application-title">Конкурс «Инношкольник» 2025</div>
+                            <div class="application-subtitle">Всероссийский конкурс инновационных проектов</div>
+                        </div>
+                        <div class="application-date">Подана: 05.02.2025</div>
+                    </div>
+                    
+                    <div class="application-card-body">
+                        <div class="application-info-item">
+                            <div class="info-item-label">Статус</div>
+                            <div class="info-item-value">
+                                <span class="status-badge status-rejected">
+                                    <span class="material-symbols-outlined" style="font-size: 14px;">cancel</span>
+                                    Отклонено
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="application-info-item">
+                            <div class="info-item-label">Мероприятие</div>
+                            <div class="info-item-value">
+                                <a href="event-details.html" style="color: var(--primary);">«Инношкольник» 2025</a>
+                            </div>
+                        </div>
+                        
+                        <div class="application-info-item">
+                            <div class="info-item-label">Даты проведения</div>
+                            <div class="info-item-value">Февраль - Апрель 2025</div>
+                        </div>
+                        
+                        <div class="application-info-item">
+                            <div class="info-item-label">Номер заявки</div>
+                            <div class="info-item-value">#APP-2025-00891</div>
+                        </div>
+                        
+                        <div class="application-info-item">
+                            <div class="info-item-label">Направление</div>
+                            <div class="info-item-value">
+                                <span class="event-tag tag-dir praktika">Практикуйся</span>
+                            </div>
+                        </div>
+                        
+                        <div class="application-info-item">
+                            <div class="info-item-label">Причина отказа</div>
+                            <div class="info-item-value">Неполный пакет документов</div>
+                        </div>
+                    </div>
+                    
+                    <div class="application-card-footer">
+                        <div>
+                            <span style="font-size: 14px; color: var(--text-secondary);">Ответ получен: 20.02.2025</span>
+                        </div>
+                        <div class="application-actions">
+                            <button class="action-btn primary" onclick="viewApplicationDetails(3)">
+                                <span class="material-symbols-outlined">visibility</span>
+                                Просмотр
+                            </button>
+                            <button class="action-btn secondary">
+                                <span class="material-symbols-outlined">edit</span>
+                                Подать заново
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Заявка 4 -->
+                <div class="application-card" data-status="completed" data-type="sport">
+                    <div class="application-card-header">
+                        <div>
+                            <div class="application-title">Марафон «Бегущие сердца» 2025</div>
+                            <div class="application-subtitle">Благотворительный спортивный марафон</div>
+                        </div>
+                        <div class="application-date">Подана: 20.01.2025</div>
+                    </div>
+                    
+                    <div class="application-card-body">
+                        <div class="application-info-item">
+                            <div class="info-item-label">Статус</div>
+                            <div class="info-item-value">
+                                <span class="status-badge status-completed">
+                                    <span class="material-symbols-outlined" style="font-size: 14px;">done_all</span>
+                                    Завершено
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="application-info-item">
+                            <div class="info-item-label">Мероприятие</div>
+                            <div class="info-item-value">
+                                <a href="event-details.html" style="color: var(--primary);">«Бегущие сердца» 2025</a>
+                            </div>
+                        </div>
+                        
+                        <div class="application-info-item">
+                            <div class="info-item-label">Даты проведения</div>
+                            <div class="info-item-value">1 июня 2025</div>
+                        </div>
+                        
+                        <div class="application-info-item">
+                            <div class="info-item-label">Номер заявки</div>
+                            <div class="info-item-value">#APP-2025-00327</div>
+                        </div>
+                        
+                        <div class="application-info-item">
+                            <div class="info-item-label">Направление</div>
+                            <div class="info-item-value">
+                                <span class="event-tag tag-dir sport">Спорт</span>
+                            </div>
+                        </div>
+                        
+                        <div class="application-info-item">
+                            <div class="info-item-label">Дистанция</div>
+                            <div class="info-item-value">10 км</div>
+                        </div>
+                    </div>
+                    
+                    <div class="application-card-footer">
+                        <div>
+                            <span style="font-size: 14px; color: var(--text-secondary);">Участие подтверждено: 15.02.2025</span>
+                        </div>
+                        <div class="application-actions">
+                            <button class="action-btn primary" onclick="viewApplicationDetails(4)">
+                                <span class="material-symbols-outlined">visibility</span>
+                                Просмотр
+                            </button>
+                            <button class="action-btn secondary">
+                                <span class="material-symbols-outlined">star</span>
+                                Оставить отзыв
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Остальные заявки будут генерироваться через JS -->
+            </div>
+
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <span class="material-symbols-outlined">search_off</span>
+                <h3>Заявки не найдены</h3>
+                <p>По вашим фильтрам не найдено ни одной заявки. Попробуйте изменить условия поиска.</p>
+                <button class="add-achievement-btn" onclick="resetFilters()">
+                    <span class="material-symbols-outlined">refresh</span>
+                    Сбросить фильтры
+                </button>
+            </div>
+
+            <div class="pagination">
+                <button class="page-btn disabled">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">4</button>
+                <button class="page-btn">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Модальное окно деталей заявки -->
+    <div class="modal-overlay" id="applicationModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Детали заявки</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalContent">
+                <!-- Контент будет заполнен JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn secondary" onclick="closeModal()">Закрыть</button>
+                <button class="action-btn primary" onclick="downloadApplication()">
+                    <span class="material-symbols-outlined">download</span>
+                    Скачать PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно новой заявки -->
+    <div class="modal-overlay" id="newApplicationModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Новая заявка</h2>
+                <button class="modal-close" onclick="closeNewApplicationModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 24px;">
+                    <label class="filter-label" style="margin-bottom: 8px;">Выберите мероприятие</label>
+                    <select class="filter-select" style="width: 100%;">
+                        <option value="" disabled selected>Выберите мероприятие для подачи заявки</option>
+                        <option value="1">Всероссийский форум «ШУМ.Производство» — 2026</option>
+                        <option value="2">Грантовый конкурс «Твой ход» 2025</option>
+                        <option value="3">Марафон «Бегущие сердца» 2025</option>
+                        <option value="4">Хакатон: Цифровой прорыв 2026</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 24px;">
+                    <label class="filter-label" style="margin-bottom: 8px;">Комментарий к заявке</label>
+                    <textarea class="search-input" style="width: 100%; min-height: 100px; padding: 12px;" placeholder="Дополнительная информация, пожелания..."></textarea>
+                </div>
+                
+                <div style="margin-bottom: 24px;">
+                    <label class="filter-label" style="margin-bottom: 8px;">Прикрепить документы</label>
+                    <div style="border: 2px dashed var(--border-color); border-radius: 8px; padding: 24px; text-align: center;">
+                        <span class="material-symbols-outlined" style="font-size: 48px; color: var(--text-secondary); margin-bottom: 12px;">cloud_upload</span>
+                        <p style="color: var(--text-secondary); margin-bottom: 16px;">Перетащите файлы сюда или нажмите для выбора</p>
+                        <button class="action-btn secondary" style="margin: 0 auto;">
+                            <span class="material-symbols-outlined">attach_file</span>
+                            Выбрать файлы
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn secondary" onclick="closeNewApplicationModal()">Отмена</button>
+                <button class="action-btn primary" onclick="submitNewApplication()">
+                    <span class="material-symbols-outlined">send</span>
+                    Подать заявку
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Данные заявок для генерации
+        const applicationsData = [
+            {
+                id: 5,
+                title: "Хакатон: Цифровой прорыв 2026",
+                subtitle: "Всероссийский конкурс IT-разработчиков",
+                date: "Подана: 18.03.2025",
+                status: "approved",
+                type: "competition",
+                eventLink: "event-details.html",
+                eventDates: "Апрель - Июнь 2026",
+                appNumber: "#APP-2025-01642",
+                direction: "praktika",
+                organizer: "Платформа НТИ",
+                responseDate: "Ответ получен: 05.04.2025"
+            },
+            {
+                id: 6,
+                title: "Фестиваль «Таврида.АРТ» 2025",
+                subtitle: "Фестиваль молодого искусства",
+                date: "Подана: 25.02.2025",
+                status: "awaiting",
+                type: "forum",
+                eventLink: "event-details.html",
+                eventDates: "12-16 августа 2025",
+                appNumber: "#APP-2025-01123",
+                direction: "vdohnovenie",
+                organizer: "Арт-кластер «Таврида»",
+                responseDate: "Ожидает подтверждения участия"
+            },
+            {
+                id: 7,
+                title: "Стажировка в IT-компании",
+                subtitle: "Оплачиваемая стажировка для разработчиков",
+                date: "Подана: 12.04.2025",
+                status: "pending",
+                type: "education",
+                eventLink: "event-details.html",
+                eventDates: "Июль - Август 2025",
+                appNumber: "#APP-2025-01984",
+                direction: "praktika",
+                organizer: "IT-компания «ТехноСофт»",
+                responseDate: "Ожидаемый ответ: до 30.05.2025"
+            },
+            {
+                id: 8,
+                title: "Конкурс «Студент года» 2025",
+                subtitle: "Национальная премия для студентов",
+                date: "Подана: 08.01.2025",
+                status: "completed",
+                type: "competition",
+                eventLink: "event-details.html",
+                eventDates: "Ноябрь 2025",
+                appNumber: "#APP-2025-00152",
+                direction: "priznanie",
+                organizer: "Министерство образования",
+                responseDate: "Участие подтверждено: 20.01.2025"
+            }
+        ];
+
+        // Функции для работы с заявками
+        function updateStats() {
+            const cards = document.querySelectorAll('.application-card');
+            const pending = document.querySelectorAll('.application-card[data-status="pending"]').length;
+            const approved = document.querySelectorAll('.application-card[data-status="approved"]').length;
+            const rejected = document.querySelectorAll('.application-card[data-status="rejected"]').length;
+            const total = cards.length;
+            
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('pendingCount').textContent = pending;
+            document.getElementById('approvedCount').textContent = approved;
+            document.getElementById('rejectedCount').textContent = rejected;
+            document.getElementById('totalApplications').textContent = total;
+        }
+
+        function filterApplications() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.application-card');
+            
+            let visibleCount = 0;
+            
+            cards.forEach(card => {
+                const status = card.getAttribute('data-status');
+                const type = card.getAttribute('data-type');
+                const title = card.querySelector('.application-title').textContent.toLowerCase();
+                const subtitle = card.querySelector('.application-subtitle').textContent.toLowerCase();
+                
+                const matchesStatus = statusFilter === 'all' || status === statusFilter;
+                const matchesType = typeFilter === 'all' || type === typeFilter;
+                const matchesSearch = !searchInput || 
+                    title.includes(searchInput) || 
+                    subtitle.includes(searchInput);
+                
+                if (matchesStatus && matchesType && matchesSearch) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Показываем/скрываем состояние "нет результатов"
+            const emptyState = document.getElementById('emptyState');
+            if (visibleCount === 0) {
+                emptyState.style.display = 'block';
+            } else {
+                emptyState.style.display = 'none';
+            }
+            
+            updateStats();
+        }
+
+        function resetFilters() {
+            document.getElementById('statusFilter').value = 'all';
+            document.getElementById('typeFilter').value = 'all';
+            document.getElementById('periodFilter').value = 'all';
+            document.getElementById('searchInput').value = '';
+            filterApplications();
+        }
+
+        function viewApplicationDetails(id) {
+            const modal = document.getElementById('applicationModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            // В реальном приложении здесь был бы запрос на сервер
+            // Сейчас используем статические данные
+            let appData;
+            if (id <= 4) {
+                // Первые 4 заявки уже в HTML
+                appData = {
+                    title: id === 1 ? "Всероссийский форум «ШУМ.Производство» — 2026" :
+                            id === 2 ? "Грантовый конкурс «Твой ход» 2025" :
+                            id === 3 ? "Конкурс «Инношкольник» 2025" : "Марафон «Бегущие сердца» 2025",
+                    number: id === 1 ? "#APP-2025-01573" :
+                            id === 2 ? "#APP-2025-01842" :
+                            id === 3 ? "#APP-2025-00891" : "#APP-2025-00327",
+                    status: id === 1 ? "approved" : id === 2 ? "pending" : id === 3 ? "rejected" : "completed",
+                    date: id === 1 ? "15.03.2025" : id === 2 ? "10.04.2025" : id === 3 ? "05.02.2025" : "20.01.2025"
+                };
+            } else {
+                appData = applicationsData.find(app => app.id === id) || applicationsData[0];
+            }
+            
+            let statusText = '';
+            let statusClass = '';
+            
+            switch(appData.status) {
+                case 'approved':
+                    statusText = 'Одобрено';
+                    statusClass = 'status-approved';
+                    break;
+                case 'pending':
+                    statusText = 'На рассмотрении';
+                    statusClass = 'status-pending';
+                    break;
+                case 'rejected':
+                    statusText = 'Отклонено';
+                    statusClass = 'status-rejected';
+                    break;
+                case 'completed':
+                    statusText = 'Завершено';
+                    statusClass = 'status-completed';
+                    break;
+                case 'awaiting':
+                    statusText = 'Ожидает подтверждения';
+                    statusClass = 'status-awaiting';
+                    break;
+            }
+            
+            modalContent.innerHTML = `
+                <div style="margin-bottom: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                        <div>
+                            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">${appData.title}</h3>
+                            <p style="color: var(--text-secondary);">${appData.subtitle || 'Без описания'}</p>
+                        </div>
+                        <span class="status-badge ${statusClass}">${statusText}</span>
+                    </div>
+                    
+                    <div style="background: var(--bg-light); border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Номер заявки</div>
+                                <div style="font-weight: 600;">${appData.appNumber || appData.number}</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Дата подачи</div>
+                                <div style="font-weight: 600;">${appData.date}</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Статус</div>
+                                <div style="font-weight: 600;">${statusText}</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Направление</div>
+                                <div>
+                                    ${appData.direction === 'praktika' ? '<span class="event-tag tag-dir praktika">Практикуйся</span>' :
+                                      appData.direction === 'pobeda' ? '<span class="event-tag tag-dir pobeda">Побеждай</span>' :
+                                      appData.direction === 'sport' ? '<span class="event-tag tag-dir sport">Спорт</span>' :
+                                      appData.direction === 'vdohnovenie' ? '<span class="event-tag tag-dir vdohnovenie">Вдохновляйся</span>' :
+                                      appData.direction === 'razvitie' ? '<span class="event-tag tag-dir razvitie">Развивайся</span>' :
+                                      '<span class="event-tag tag-dir priznanie">Будь признан</span>'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 24px;">
+                        <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">История обработки</h4>
+                        <div style="position: relative; padding-left: 24px;">
+                            <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--primary);"></div>
+                            <div style="position: relative; margin-bottom: 20px;">
+                                <div style="position: absolute; left: -30px; top: 0; width: 16px; height: 16px; border-radius: 50%; background: var(--primary); border: 3px solid white;"></div>
+                                <div style="font-weight: 600;">Заявка подана</div>
+                                <div style="font-size: 14px; color: var(--text-secondary);">${appData.date}</div>
+                            </div>
+                            <div style="position: relative; margin-bottom: 20px;">
+                                <div style="position: absolute; left: -30px; top: 0; width: 16px; height: 16px; border-radius: 50%; background: var(--primary); border: 3px solid white;"></div>
+                                <div style="font-weight: 600;">Заявка принята к рассмотрению</div>
+                                <div style="font-size: 14px; color: var(--text-secondary);">${appData.date}</div>
+                            </div>
+                            <div style="position: relative;">
+                                <div style="position: absolute; left: -30px; top: 0; width: 16px; height: 16px; border-radius: 50%; background: var(--primary); border: 3px solid white;"></div>
+                                <div style="font-weight: 600;">${statusText === 'Одобрено' ? 'Заявка одобрена' : statusText === 'Отклонено' ? 'Заявка отклонена' : 'Заявка обрабатывается'}</div>
+                                <div style="font-size: 14px; color: var(--text-secondary);">${appData.responseDate || 'В обработке'}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Прикрепленные документы</h4>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: var(--bg-light); border-radius: 8px;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span class="material-symbols-outlined">description</span>
+                                    <div>
+                                        <div style="font-weight: 500;">Анкета участника.pdf</div>
+                                        <div style="font-size: 12px; color: var(--text-secondary);">2.4 MB</div>
+                                    </div>
+                                </div>
+                                <button class="action-btn secondary" style="padding: 6px 12px; font-size: 12px;">
+                                    <span class="material-symbols-outlined">download</span>
+                                    Скачать
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('applicationModal').classList.remove('active');
+        }
+
+        function showNewApplicationModal() {
+            document.getElementById('newApplicationModal').classList.add('active');
+        }
+
+        function closeNewApplicationModal() {
+            document.getElementById('newApplicationModal').classList.remove('active');
+        }
+
+        function submitNewApplication() {
+            alert('Заявка успешно подана! Она появится в списке после проверки.');
+            closeNewApplicationModal();
+        }
+
+        function downloadApplication() {
+            alert('Функция скачивания PDF будет доступна в следующем обновлении!');
+        }
+
+        function cancelApplication(id) {
+            if (confirm('Вы уверены, что хотите отменить эту заявку?')) {
+                alert(`Заявка #${id} отменена.`);
+                // Здесь будет логика отмены заявки
+            }
+        }
+
+        // Генерация дополнительных заявок
+        function generateApplications() {
+            const container = document.getElementById('applicationsList');
+            
+            applicationsData.forEach(app => {
+                let statusClass, statusText, statusIcon;
+                
+                switch(app.status) {
+                    case 'approved':
+                        statusClass = 'status-approved';
+                        statusText = 'Одобрено';
+                        statusIcon = 'check_circle';
+                        break;
+                    case 'pending':
+                        statusClass = 'status-pending';
+                        statusText = 'На рассмотрении';
+                        statusIcon = 'schedule';
+                        break;
+                    case 'rejected':
+                        statusClass = 'status-rejected';
+                        statusText = 'Отклонено';
+                        statusIcon = 'cancel';
+                        break;
+                    case 'awaiting':
+                        statusClass = 'status-awaiting';
+                        statusText = 'Ожидает подтверждения';
+                        statusIcon = 'hourglass_empty';
+                        break;
+                    case 'completed':
+                        statusClass = 'status-completed';
+                        statusText = 'Завершено';
+                        statusIcon = 'done_all';
+                        break;
+                }
+                
+                let directionTag;
+                switch(app.direction) {
+                    case 'praktika':
+                        directionTag = '<span class="event-tag tag-dir praktika">Практикуйся</span>';
+                        break;
+                    case 'pobeda':
+                        directionTag = '<span class="event-tag tag-dir pobeda">Побеждай</span>';
+                        break;
+                    case 'sport':
+                        directionTag = '<span class="event-tag tag-dir sport">Спорт</span>';
+                        break;
+                    case 'vdohnovenie':
+                        directionTag = '<span class="event-tag tag-dir vdohnovenie">Вдохновляйся</span>';
+                        break;
+                    case 'razvitie':
+                        directionTag = '<span class="event-tag tag-dir razvitie">Развивайся</span>';
+                        break;
+                    case 'priznanie':
+                        directionTag = '<span class="event-tag tag-dir priznanie">Будь признан</span>';
+                        break;
+                }
+                
+                const appHtml = `
+                    <div class="application-card" data-status="${app.status}" data-type="${app.type}">
+                        <div class="application-card-header">
+                            <div>
+                                <div class="application-title">${app.title}</div>
+                                <div class="application-subtitle">${app.subtitle}</div>
+                            </div>
+                            <div class="application-date">${app.date}</div>
+                        </div>
+                        
+                        <div class="application-card-body">
+                            <div class="application-info-item">
+                                <div class="info-item-label">Статус</div>
+                                <div class="info-item-value">
+                                    <span class="status-badge ${statusClass}">
+                                        <span class="material-symbols-outlined" style="font-size: 14px;">${statusIcon}</span>
+                                        ${statusText}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="application-info-item">
+                                <div class="info-item-label">Мероприятие</div>
+                                <div class="info-item-value">
+                                    <a href="${app.eventLink}" style="color: var(--primary);">${app.title}</a>
+                                </div>
+                            </div>
+                            
+                            <div class="application-info-item">
+                                <div class="info-item-label">Даты проведения</div>
+                                <div class="info-item-value">${app.eventDates}</div>
+                            </div>
+                            
+                            <div class="application-info-item">
+                                <div class="info-item-label">Номер заявки</div>
+                                <div class="info-item-value">${app.appNumber}</div>
+                            </div>
+                            
+                            <div class="application-info-item">
+                                <div class="info-item-label">Направление</div>
+                                <div class="info-item-value">
+                                    ${directionTag}
+                                </div>
+                            </div>
+                            
+                            <div class="application-info-item">
+                                <div class="info-item-label">Организатор</div>
+                                <div class="info-item-value">${app.organizer}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="application-card-footer">
+                            <div>
+                                <span style="font-size: 14px; color: var(--text-secondary);">${app.responseDate}</span>
+                            </div>
+                            <div class="application-actions">
+                                <button class="action-btn primary" onclick="viewApplicationDetails(${app.id})">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                    Просмотр
+                                </button>
+                                <button class="action-btn secondary">
+                                    <span class="material-symbols-outlined">download</span>
+                                    Скачать
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                container.insertAdjacentHTML('beforeend', appHtml);
+            });
+            
+            updateStats();
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            generateApplications();
+            
+            // Назначение обработчиков фильтров
+            document.getElementById('statusFilter').addEventListener('change', filterApplications);
+            document.getElementById('typeFilter').addEventListener('change', filterApplications);
+            document.getElementById('periodFilter').addEventListener('change', filterApplications);
+            document.getElementById('searchInput').addEventListener('input', filterApplications);
+            document.getElementById('pageSize').addEventListener('change', filterApplications);
+            
+            // Закрытие модальных окон при клике вне окна
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.classList.remove('active');
+                    }
+                });
+            });
+            
+            // Обновление статистики
+            updateStats();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1781 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Молодежь Белогорья</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --primary: #0066CC;
+            --primary-light: #E6F0FF;
+            --success: #00A86B;
+            --warning: #FF9500;
+            --danger: #FF3B30;
+            --text-main: #1D1D1F;
+            --text-secondary: #606060;
+            --bg-light: #F5F5F7;
+            --separator: #E0E0E0;
+            --border-color: #D1D1D6;
+            --dir-praktikuisya: #4285F4;
+            --dir-pobezhdaj: #EA4335;
+            --dir-sport: #34A853;
+            --dir-vdohnovlyajsya: #FBBC05;
+            --dir-razvivajsya: #9C27B0;
+            --dir-bud-priznan: #FF6B6B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f9f9f9;
+            color: var(--text-main);
+        }
+        /* Стили для страницы "Найти команду" */
+        .find-team-header {
+            margin-bottom: 32px;
+        }
+
+        .find-team-title {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--text-main);
+            font-family: 'Oswald', sans-serif;
+            margin-bottom: 8px;
+        }
+
+        .find-team-subtitle {
+            color: var(--text-secondary);
+            font-size: 16px;
+            max-width: 600px;
+        }
+
+        .search-mode-tabs {
+            display: flex;
+            background: white;
+            border-radius: 12px;
+            padding: 8px;
+            margin-bottom: 24px;
+            border: 1px solid var(--separator);
+            max-width: 500px;
+        }
+
+        .search-mode-tab {
+            flex: 1;
+            text-align: center;
+            padding: 14px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .search-mode-tab:hover {
+            background: var(--bg-light);
+        }
+
+        .search-mode-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .search-controls {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid var(--separator);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .search-btn-large {
+            grid-column: 1 / -1;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .search-btn-large:hover {
+            background: #0052a3;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .results-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .results-count {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        /* Карточка человека */
+        .person-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--separator);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .person-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+            border-color: var(--primary-light);
+        }
+
+        .person-header {
+            padding: 20px 20px 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .person-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-light);
+            flex-shrink: 0;
+        }
+
+        .person-info {
+            flex: 1;
+        }
+
+        .person-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .person-age {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .person-location {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .person-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--warning);
+            font-size: 14px;
+        }
+
+        .person-content {
+            padding: 0 20px 20px;
+        }
+
+        .person-description {
+            font-size: 14px;
+            color: var(--text-main);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .person-interests {
+            margin-bottom: 20px;
+        }
+
+        .interests-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .interests-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .interest-tag {
+            padding: 6px 12px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .person-skills {
+            margin-bottom: 20px;
+        }
+
+        .skills-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-tag {
+            padding: 6px 12px;
+            background: var(--bg-light);
+            color: var(--text-main);
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .person-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .person-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .person-btn.primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+        }
+
+        .person-btn.primary:hover {
+            background: #0052a3;
+        }
+
+        .person-btn.secondary {
+            background: white;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .person-btn.secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Карточка проекта */
+        .project-search-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--separator);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-search-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+            border-color: var(--primary-light);
+        }
+
+        .project-search-image {
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .project-search-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .project-search-card:hover .project-search-image img {
+            transform: scale(1.05);
+        }
+
+        .project-search-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            background: var(--primary);
+        }
+
+        .project-search-content {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-search-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            gap: 16px;
+        }
+
+        .project-search-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.3;
+            flex: 1;
+        }
+
+        .project-search-status {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .status-looking {
+            background: rgba(0, 102, 204, 0.1);
+            color: var(--primary);
+        }
+
+        .status-active {
+            background: rgba(0, 168, 107, 0.1);
+            color: var(--success);
+        }
+
+        .project-search-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 20px;
+            flex: 1;
+        }
+
+        .project-search-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .project-search-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .project-search-tag {
+            padding: 6px 12px;
+            background: var(--bg-light);
+            color: var(--text-main);
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .project-search-tag.direction {
+            color: white;
+        }
+
+        .project-search-tag.direction-praktika {
+            background: var(--dir-praktikuisya);
+        }
+        
+        .project-search-tag.direction-pobeda {
+            background: var(--dir-pobezhdaj);
+        }
+        
+        .project-search-tag.direction-sport {
+            background: var(--dir-sport);
+        }
+        
+        .project-search-tag.direction-vdohnovenie {
+            background: var(--dir-vdohnovlyajsya);
+        }
+        
+        .project-search-tag.direction-razvitie {
+            background: var(--dir-razvivajsya);
+        }
+        
+        .project-search-tag.direction-priznanie {
+            background: var(--dir-bud-priznan);
+        }
+
+        .project-search-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: auto;
+        }
+
+        .empty-results {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 12px;
+            border: 2px dashed var(--separator);
+            grid-column: 1 / -1;
+        }
+
+        .empty-results .material-symbols-outlined {
+            font-size: 64px;
+            margin-bottom: 16px;
+            color: var(--separator);
+        }
+
+        .empty-results h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .empty-results p {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Модальное окно приглашения */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--separator);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--separator);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 992px) {
+            .results-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            aside {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--separator);
+                max-height: 300px;
+            }
+
+            .header-center {
+                display: none;
+            }
+
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+
+            .results-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .person-header {
+                flex-direction: column;
+                text-align: center;
+                align-items: center;
+            }
+
+            .person-avatar {
+                width: 100px;
+                height: 100px;
+            }
+
+            .project-search-actions, .person-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-mode-tabs {
+                flex-direction: column;
+            }
+
+            main {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <span class="material-symbols-outlined menu-icon">menu</span>
+            <div class="logo-container">
+                <div class="logo-text">
+                    <img src="logo.svg" alt="Логотип Молодежь Белогорья" class="logo-img">
+                </div>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="search-box">
+                <div class="search-input-wrapper">
+                    <input type="text" placeholder="Введите запрос">
+                    <span class="material-symbols-outlined" style="color: #606060; font-size: 20px; cursor: pointer; margin-right: 8px;">keyboard</span>
+                </div>
+                <button class="search-btn">
+                    <span class="material-symbols-outlined">search</span>
+                </button>
+                <button class="mic-btn">
+                    <span class="material-symbols-outlined">mic</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <span class="material-symbols-outlined" style="cursor: pointer; color: #606060;">notifications</span>
+            <div class="avatar">A</div>
+        </div>
+    </header>
+
+    <div class="container">
+    <aside>
+            <div class="sidebar-section">
+                <a href="index.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">home</span>
+                    Главная
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">emoji_events</span> Истории успеха
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">military_tech</span>
+                    Список лидеров
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+              <div class="section-title">Направления</div>
+                <a href="direction.html"  class="sidebar-link dir-praktikuisya" data-direction="praktikuisya">
+                    <span class="material-symbols-outlined">model_training</span>
+                    Практикуйся
+                </a>
+                <a href="direction.html"  class="sidebar-link dir-pobezhdaj" data-direction="pobezhdaj">
+                    <span class="material-symbols-outlined">workspace_premium</span>
+                    Побеждай
+                </a>
+                <a href="direction.html"  class="sidebar-link dir-sport" data-direction="sport">
+                    <span class="material-symbols-outlined">sports_basketball</span>
+                    Спорт
+                </a>
+                <a href="direction.html"  class="sidebar-link dir-vdohnovlyajsya" data-direction="vdohnovlyajsya">
+                    <span class="material-symbols-outlined">auto_awesome</span>
+                    Вдохновляйся
+                </a>
+                <a href="direction.html"  class="sidebar-link dir-razvivajsya" data-direction="razvivajsya">
+                    <span class="material-symbols-outlined">lightbulb</span>
+                    Развивайся
+                </a>
+                <a href="direction.html" class="sidebar-link dir-bud-priznan" data-direction="bud-priznan">
+                    <span class="material-symbols-outlined">stars</span>
+                    Будь признан
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <a href="profile.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">account_circle</span>
+                    Профиль
+                </a>
+                <a href="applications.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">description</span>
+                    Заявки
+                </a>
+                <a href="projects.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">account_tree</span>
+                    Мои проекты
+                </a>
+                <a href="points-exchange.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">redeem</span>
+                    Обмен баллов
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">Другие возможности</div>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined" style="color: #00ff11;">smart_toy</span>
+                    Ai куратор
+                </a>
+                <a href="searching.html" class="sidebar-link active">
+                    <span class="material-symbols-outlined" style="color: #0055ff;">group_add</span>
+                    Найти команду в проект
+                </a>
+                    <a href="searchnastavnik.html" class="sidebar-link">
+                    <span class="material-symbols-outlined" style="color: #ff00aa;">group_add</span>
+                    Найти наставника
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <div class="section-title">Навигатор</div>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">theater_comedy</span>
+                    Культурные мероприятия
+                </a>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">fitness_center</span>
+                    Спорт
+                </a>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">school</span>
+                    ДПО организации
+                </a>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">explore</span>
+                    Возможности самореализации
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">settings</span>
+                    Настройки
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">help_outline</span>
+                    Справка
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">mail</span>
+                    Связаться с нами
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">settings</span>
+                    Настройки
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">help_outline</span>
+                    Справка
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">mail</span>
+                    Связаться с нами
+                </a>
+            </div>
+
+            <div class="sidebar-section no-border">
+                <div class="footer-links">
+                    <a href="#">О проекте</a>
+                    <a href="#">Направления</a>
+                    <a href="#">Связаться с нами</a>
+                    <a href="#">Организация</a>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Условия</a>
+                    <a href="#">Конфиденциальность</a>
+                </div>
+                <div class="copyright">
+                    © 2026 MolodezhBelogoria
+                </div>
+            </div>
+        </aside>
+
+        <main>
+            <div class="find-team-header">
+                <h1 class="find-team-title">Найти команду</h1>
+                <p class="find-team-subtitle">Найдите участников для своего проекта или присоединитесь к существующему проекту</p>
+            </div>
+
+            <div class="search-mode-tabs">
+                <button class="search-mode-tab active" data-mode="people">
+                    <span class="material-symbols-outlined">person_search</span>
+                    Найти людей
+                </button>
+                <button class="search-mode-tab" data-mode="projects">
+                    <span class="material-symbols-outlined">account_tree</span>
+                    Найти проект
+                </button>
+            </div>
+
+            <!-- Форма поиска людей -->
+            <div class="search-controls" id="peopleSearchControls">
+                <form class="search-form" id="peopleSearchForm">
+                    <div class="form-group">
+                        <label class="form-label">Интересы</label>
+                        <input type="text" class="form-input" placeholder="Например: программирование, спорт, экология">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Возраст</label>
+                        <div style="display: flex; gap: 12px;">
+                            <input type="number" class="form-input" placeholder="От" min="14" max="35">
+                            <input type="number" class="form-input" placeholder="До" min="14" max="35">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Навыки</label>
+                        <input type="text" class="form-input" placeholder="Например: дизайн, менеджмент, копирайтинг">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Направление деятельности</label>
+                        <select class="form-select">
+                            <option value="">Все направления</option>
+                            <option value="praktika">Практикуйся</option>
+                            <option value="pobeda">Побеждай</option>
+                            <option value="sport">Спорт</option>
+                            <option value="vdohnovenie">Вдохновляйся</option>
+                            <option value="razvitie">Развивайся</option>
+                            <option value="priznanie">Будь признан</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Город</label>
+                        <select class="form-select">
+                            <option value="">Любой город</option>
+                            <option value="belgorod">Белгород</option>
+                            <option value="stary-oskol">Старый Оскол</option>
+                            <option value="gubkin">Губкин</option>
+                            <option value="shebekino">Шебекино</option>
+                            <option value="alekseevka">Алексеевка</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="search-btn-large">
+                        <span class="material-symbols-outlined">search</span>
+                        Найти людей
+                    </button>
+                </form>
+            </div>
+
+            <!-- Форма поиска проектов -->
+            <div class="search-controls" id="projectsSearchControls" style="display: none;">
+                <form class="search-form" id="projectsSearchForm">
+                    <div class="form-group">
+                        <label class="form-label">Название проекта</label>
+                        <input type="text" class="form-input" placeholder="Введите название проекта">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Направление</label>
+                        <select class="form-select">
+                            <option value="">Все направления</option>
+                            <option value="praktika">Практикуйся</option>
+                            <option value="pobeda">Побеждай</option>
+                            <option value="sport">Спорт</option>
+                            <option value="vdohnovenie">Вдохновляйся</option>
+                            <option value="razvitie">Развивайся</option>
+                            <option value="priznanie">Будь признан</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Категория</label>
+                        <select class="form-select">
+                            <option value="">Все категории</option>
+                            <option value="social">Социальный</option>
+                            <option value="tech">Технологии</option>
+                            <option value="sport">Спорт</option>
+                            <option value="culture">Культура</option>
+                            <option value="education">Образование</option>
+                            <option value="ecology">Экология</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Требуемые навыки</label>
+                        <input type="text" class="form-input" placeholder="Например: дизайн, программирование, маркетинг">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Статус проекта</label>
+                        <select class="form-select">
+                            <option value="">Любой статус</option>
+                            <option value="looking">Ищет участников</option>
+                            <option value="active">Активный</option>
+                            <option value="planning">Планирование</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="search-btn-large">
+                        <span class="material-symbols-outlined">search</span>
+                        Найти проекты
+                    </button>
+                </form>
+            </div>
+
+            <!-- Результаты поиска людей -->
+            <div id="peopleResults">
+                <div class="results-header">
+                    <h2 class="results-title">Найдено людей: <span id="peopleCount">8</span></h2>
+                    <div class="results-count">Рекомендованы для ваших проектов</div>
+                </div>
+                
+                <div class="results-grid" id="peopleList">
+                    <!-- Человек 1 -->
+                    <div class="person-card">
+                        <div class="person-header">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop" alt="Александр" class="person-avatar">
+                            <div class="person-info">
+                                <h3 class="person-name">Александр Иванов</h3>
+                                <div class="person-age">22 года</div>
+                                <div class="person-location">
+                                    <span class="material-symbols-outlined" style="font-size: 16px;">location_on</span>
+                                    Белгород
+                                </div>
+                                <div class="person-rating">
+                                    <span class="material-symbols-outlined" style="font-size: 16px;">star</span>
+                                    4.8 (12 отзывов)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="person-content">
+                            <p class="person-description">Фронтенд-разработчик с опытом работы 2 года. Участвовал в разработке 3 социальных проектов. Ищу интересные проекты в сфере IT и социального предпринимательства.</p>
+                            
+                            <div class="person-interests">
+                                <div class="interests-title">Интересы:</div>
+                                <div class="interests-list">
+                                    <span class="interest-tag">Программирование</span>
+                                    <span class="interest-tag">Социальные проекты</span>
+                                    <span class="interest-tag">Стартапы</span>
+                                    <span class="interest-tag">Волонтерство</span>
+                                </div>
+                            </div>
+                            
+                            <div class="person-skills">
+                                <div class="skills-title">Навыки:</div>
+                                <div class="skills-list">
+                                    <span class="skill-tag">JavaScript</span>
+                                    <span class="skill-tag">React</span>
+                                    <span class="skill-tag">UI/UX дизайн</span>
+                                    <span class="skill-tag">Проектный менеджмент</span>
+                                </div>
+                            </div>
+                            
+                            <div class="person-actions">
+                                <button class="person-btn primary" onclick="invitePerson(1)">
+                                    <span class="material-symbols-outlined">person_add</span>
+                                    Пригласить
+                                </button>
+                                <button class="person-btn secondary" onclick="viewProfile(1)">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                    Профиль
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Человек 2 -->
+                    <div class="person-card">
+                        <div class="person-header">
+                            <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?q=80&w=1000&auto=format&fit=crop" alt="Мария" class="person-avatar">
+                            <div class="person-info">
+                                <h3 class="person-name">Мария Смирнова</h3>
+                                <div class="person-age">24 года</div>
+                                <div class="person-location">
+                                    <span class="material-symbols-outlined" style="font-size: 16px;">location_on</span>
+                                    Старый Оскол
+                                </div>
+                                <div class="person-rating">
+                                    <span class="material-symbols-outlined" style="font-size: 16px;">star</span>
+                                    4.9 (18 отзывов)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="person-content">
+                            <p class="person-description">Эколог и активист. Организовала 5 экологических акций в регионе. Ищу команду для проекта по озеленению города и экологическому просвещению молодежи.</p>
+                            
+                            <div class="person-interests">
+                                <div class="interests-title">Интересы:</div>
+                                <div class="interests-list">
+                                    <span class="interest-tag">Экология</span>
+                                    <span class="interest-tag">Образование</span>
+                                    <span class="interest-tag">Природа</span>
+                                    <span class="interest-tag">Волонтерство</span>
+                                </div>
+                            </div>
+                            
+                            <div class="person-skills">
+                                <div class="skills-title">Навыки:</div>
+                                <div class="skills-list">
+                                    <span class="skill-tag">Организация мероприятий</span>
+                                    <span class="skill-tag">Экологическое право</span>
+                                    <span class="skill-tag">Грантовая заявка</span>
+                                    <span class="skill-tag">Коммуникация</span>
+                                </div>
+                            </div>
+                            
+                            <div class="person-actions">
+                                <button class="person-btn primary" onclick="invitePerson(2)">
+                                    <span class="material-symbols-outlined">person_add</span>
+                                    Пригласить
+                                </button>
+                                <button class="person-btn secondary" onclick="viewProfile(2)">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                    Профиль
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Человек 3 -->
+                    <div class="person-card">
+                        <div class="person-header">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1000&auto=format&fit=crop" alt="Дмитрий" class="person-avatar">
+                            <div class="person-info">
+                                <h3 class="person-name">Дмитрий Петров</h3>
+                                <div class="person-age">19 лет</div>
+                                <div class="person-location">
+                                    <span class="material-symbols-outlined" style="font-size: 16px;">location_on</span>
+                                    Белгород
+                                </div>
+                                <div class="person-rating">
+                                    <span class="material-symbols-outlined" style="font-size: 16px;">star</span>
+                                    4.5 (7 отзывов)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="person-content">
+                            <p class="person-description">Студент-спортсмен, капитан университетской баскетбольной команды. Ищу единомышленников для создания спортивных проектов и мероприятий для молодежи.</p>
+                            
+                            <div class="person-interests">
+                                <div class="interests-title">Интересы:</div>
+                                <div class="interests-list">
+                                    <span class="interest-tag">Спорт</span>
+                                    <span class="interest-tag">Баскетбол</span>
+                                    <span class="interest-tag">Здоровый образ жизни</span>
+                                    <span class="interest-tag">Тренировки</span>
+                                </div>
+                            </div>
+                            
+                            <div class="person-skills">
+                                <div class="skills-title">Навыки:</div>
+                                <div class="skills-list">
+                                    <span class="skill-tag">Тренерская работа</span>
+                                    <span class="skill-tag">Организация турниров</span>
+                                    <span class="skill-tag">Командная работа</span>
+                                    <span class="skill-tag">Мотивация</span>
+                                </div>
+                            </div>
+                            
+                            <div class="person-actions">
+                                <button class="person-btn primary" onclick="invitePerson(3)">
+                                    <span class="material-symbols-outlined">person_add</span>
+                                    Пригласить
+                                </button>
+                                <button class="person-btn secondary" onclick="viewProfile(3)">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                    Профиль
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Остальные люди будут генерироваться через JS -->
+                </div>
+            </div>
+
+            <!-- Результаты поиска проектов -->
+            <div id="projectsResults" style="display: none;">
+                <div class="results-header">
+                    <h2 class="results-title">Найдено проектов: <span id="projectsCount">6</span></h2>
+                    <div class="results-count">Ищут участников</div>
+                </div>
+                
+                <div class="results-grid" id="projectsList">
+                    <!-- Проект 1 -->
+                    <div class="project-search-card">
+                        <div class="project-search-image">
+                            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1000&auto=format&fit=crop" alt="IT проект">
+                            <div class="project-search-badge">Ищет команду</div>
+                        </div>
+                        <div class="project-search-content">
+                            <div class="project-search-header">
+                                <h3 class="project-search-title">Мобильное приложение для волонтеров</h3>
+                                <div class="project-search-status status-looking">Ищет участников</div>
+                            </div>
+                            <p class="project-search-description">Разработка платформы для координации волонтерской деятельности в регионе. Нужны разработчики, дизайнеры и менеджеры.</p>
+                            
+                            <div class="project-search-meta">
+                                <div class="meta-item">
+                                    <span class="material-symbols-outlined" style="font-size: 16px;">group</span>
+                                    Нужно 5 человек
+                                </div>
+                                <div class="meta-item">
+                                    <span class="material-symbols-outlined" style="font-size: 16px;">schedule</span>
+                                    3 месяца
+                                </div>
+                            </div>
+                            
+                            <div class="project-search-tags">
+                                <span class="project-search-tag direction direction-praktika">Практикуйся</span>
+                                <span class="project-search-tag">IT</span>
+                                <span class="project-search-tag">Волонтерство</span>
+                                <span class="project-search-tag">Мобильная разработка</span>
+                            </div>
+                            
+                            <div class="project-search-actions">
+                                <button class="person-btn primary" onclick="applyToProject(1)">
+                                    <span class="material-symbols-outlined">send</span>
+                                    Откликнуться
+                                </button>
+                                <button class="person-btn secondary" onclick="viewProject(1)">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                    Подробнее
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Проект 2 -->
+                    <div class="project-search-card">
+                        <div class="project-search-image">
+                            <img src="https://images.unsplash.com/photo-1545235617-9465d2a55698?q=80&w=1000&auto=format&fit=crop" alt="Культурный проект">
+                            <div class="project-search-badge">Ищет команду</div>
+                        </div>
+                        <div class="project-search-content">
+                            <div class="project-search-header">
+                                <h3 class="project-search-title">Молодежный театральный фестиваль</h3>
+                                <div class="project-search-status status-looking">Ищет участников</div>
+                            </div>
+                            <p class="project-search-description">Организация ежегодного фестиваля молодых театральных коллективов Белгородской области. Нужны организаторы, PR-специалисты, волонтеры.</p>
+                            
+                            <div class="project-search-meta">
+                                <div class="meta-item">
+                                    <span class="material-symbols-outlined" style="font-size: 16px;">group</span>
+                                    Нужно 8 человек
+                                </div>
+                                <div class="meta-item">
+                                    <span class="material-symbols-outlined" style="font-size: 16px;">schedule</span>
+                                    4 месяца
+                                </div>
+                            </div>
+                            
+                            <div class="project-search-tags">
+                                <span class="project-search-tag direction direction-vdohnovenie">Вдохновляйся</span>
+                                <span class="project-search-tag">Культура</span>
+                                <span class="project-search-tag">Театр</span>
+                                <span class="project-search-tag">Фестиваль</span>
+                            </div>
+                            
+                            <div class="project-search-actions">
+                                <button class="person-btn primary" onclick="applyToProject(2)">
+                                    <span class="material-symbols-outlined">send</span>
+                                    Откликнуться
+                                </button>
+                                <button class="person-btn secondary" onclick="viewProject(2)">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                    Подробнее
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Проект 3 -->
+                    <div class="project-search-card">
+                        <div class="project-search-image">
+                            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1000&auto=format&fit=crop" alt="Экологический проект">
+                            <div class="project-search-badge">Ищет команду</div>
+                        </div>
+                        <div class="project-search-content">
+                            <div class="project-search-header">
+                                <h3 class="project-search-title">Эко-город: чистый Белгород</h3>
+                                <div class="project-search-status status-looking">Ищет участников</div>
+                            </div>
+                            <p class="project-search-description">Проект по раздельному сбору мусора и озеленению города. Вовлечение молодежи в экологические инициативы. Нужны активисты, экологи, организаторы.</p>
+                            
+                            <div class="project-search-meta">
+                                <div class="meta-item">
+                                    <span class="material-symbols-outlined" style="font-size: 16px;">group</span>
+                                    Нужно 10 человек
+                                </div>
+                                <div class="meta-item">
+                                    <span class="material-symbols-outlined" style="font-size: 16px;">schedule</span>
+                                    6 месяцев
+                                </div>
+                            </div>
+                            
+                            <div class="project-search-tags">
+                                <span class="project-search-tag direction direction-pobeda">Побеждай</span>
+                                <span class="project-search-tag">Экология</span>
+                                <span class="project-search-tag">Город</span>
+                                <span class="project-search-tag">Волонтерство</span>
+                            </div>
+                            
+                            <div class="project-search-actions">
+                                <button class="person-btn primary" onclick="applyToProject(3)">
+                                    <span class="material-symbols-outlined">send</span>
+                                    Откликнуться
+                                </button>
+                                <button class="person-btn secondary" onclick="viewProject(3)">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                    Подробнее
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Остальные проекты будут генерироваться через JS -->
+                </div>
+            </div>
+
+            <!-- Состояние "нет результатов" -->
+            <div id="emptyResults" class="empty-results" style="display: none;">
+                <span class="material-symbols-outlined">search_off</span>
+                <h3>Ничего не найдено</h3>
+                <p>Попробуйте изменить параметры поиска или создайте свой проект, чтобы найти команду</p>
+                <button class="person-btn primary" onclick="showNewProjectModal()" style="width: auto; padding: 12px 24px;">
+                    <span class="material-symbols-outlined">add</span>
+                    Создать проект
+                </button>
+            </div>
+</main>
+    </div>
+
+    <!-- Модальное окно приглашения -->
+    <div class="modal-overlay" id="inviteModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Пригласить в команду</h2>
+                <button class="modal-close" onclick="closeInviteModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="inviteForm">
+                    <div class="form-group">
+                        <label class="form-label">Выберите проект</label>
+                        <select class="form-select" required>
+                            <option value="" disabled selected>Выберите проект</option>
+                            <option value="1">Эко-город: чистый Белгород</option>
+                            <option value="2">Мобильное приложение для волонтеров</option>
+                            <option value="3">Школьная лига по баскетболу</option>
+                            <option value="4">Молодежный театральный фестиваль</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Роль в проекте</label>
+                        <select class="form-select" required>
+                            <option value="" disabled selected>Выберите роль</option>
+                            <option value="developer">Разработчик</option>
+                            <option value="designer">Дизайнер</option>
+                            <option value="manager">Менеджер</option>
+                            <option value="volunteer">Волонтер</option>
+                            <option value="expert">Эксперт</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Сообщение (необязательно)</label>
+                        <textarea class="form-textarea" placeholder="Расскажите о проекте и почему приглашаете этого человека..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="person-btn secondary" onclick="closeInviteModal()">
+                    Отмена
+                </button>
+                <button class="person-btn primary" onclick="sendInvitation()">
+                    <span class="material-symbols-outlined">send</span>
+                    Отправить приглашение
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно отклика на проект -->
+    <div class="modal-overlay" id="applyModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Откликнуться на проект</h2>
+                <button class="modal-close" onclick="closeApplyModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="applyForm">
+                    <div class="form-group">
+                        <label class="form-label">Желаемая роль</label>
+                        <select class="form-select" required>
+                            <option value="" disabled selected>Выберите роль</option>
+                            <option value="developer">Разработчик</option>
+                            <option value="designer">Дизайнер</option>
+                            <option value="manager">Менеджер</option>
+                            <option value="volunteer">Волонтер</option>
+                            <option value="expert">Эксперт</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Ваши навыки для этой роли</label>
+                        <textarea class="form-textarea" placeholder="Опишите ваш опыт и навыки, которые подходят для этой роли..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Сколько времени можете уделять проекту?</label>
+                        <select class="form-select" required>
+                            <option value="" disabled selected>Выберите вариант</option>
+                            <option value="1-3">1-3 часа в неделю</option>
+                            <option value="3-5">3-5 часов в неделю</option>
+                            <option value="5-10">5-10 часов в неделю</option>
+                            <option value="10+">Более 10 часов в неделю</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Дополнительная информация (необязательно)</label>
+                        <textarea class="form-textarea" placeholder="Расскажите о себе, почему хотите участвовать в проекте..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="person-btn secondary" onclick="closeApplyModal()">
+                    Отмена
+                </button>
+                <button class="person-btn primary" onclick="sendApplication()">
+                    <span class="material-symbols-outlined">send</span>
+                    Отправить отклик
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Данные для генерации
+        const peopleData = [
+            {
+                id: 4,
+                name: "Анна Козлова",
+                age: 21,
+                city: "Белгород",
+                rating: 4.7,
+                reviews: 9,
+                description: "Дизайнер с опытом работы в социальных проектах. Создавала айдентику для 3 молодежных мероприятий. Ищу проекты в сфере культуры и социальной рекламы.",
+                interests: ["Дизайн", "Искусство", "Социальная реклама", "Фотография"],
+                skills: ["UI/UX дизайн", "Графический дизайн", "Иллюстрация", "Брендинг"],
+                image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=1000&auto=format&fit=crop"
+            },
+            {
+                id: 5,
+                name: "Илья Соколов",
+                age: 25,
+                city: "Губкин",
+                rating: 4.9,
+                reviews: 15,
+                description: "Проектный менеджер с опытом реализации 5 социальных проектов. Специализируюсь на грантовых заявках и отчетности. Ищу команду для масштабного социального проекта.",
+                interests: ["Менеджмент", "Социальные проекты", "Гранты", "Образование"],
+                skills: ["Управление проектами", "Грантовая заявка", "Бюджетирование", "Командообразование"],
+                image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000&auto=format&fit=crop"
+            },
+            {
+                id: 6,
+                name: "Екатерина Новикова",
+                age: 23,
+                city: "Шебекино",
+                rating: 4.6,
+                reviews: 11,
+                description: "Специалист по SMM и продвижению в социальных сетях. Помогала продвигать 7 молодежных проектов. Ищу интересные проекты для сотрудничества.",
+                interests: ["Маркетинг", "Социальные сети", "Контент", "Блоггинг"],
+                skills: ["SMM", "Копирайтинг", "Таргетированная реклама", "Аналитика"],
+                image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=1000&auto=format&fit=crop"
+            }
+        ];
+
+        const projectsData = [
+            {
+                id: 4,
+                title: "Исторический квест по Белгороду",
+                description: "Разработка мобильного квеста по историческим местам города для школьников. Нужны историки, разработчики и дизайнеры.",
+                needed: 4,
+                duration: "2 месяца",
+                direction: "razvitie",
+                tags: ["Образование", "История", "Квест", "IT"],
+                image: "https://images.unsplash.com/photo-1511733871468-8a6a6c2e8c3d?q=80&w=1000&auto=format&fit=crop"
+            },
+            {
+                id: 5,
+                title: "Стартап-акселератор для школьников",
+                description: "Программа поддержки предпринимательских инициатив среди старшеклассников. Нужны менторы, организаторы, PR-специалисты.",
+                needed: 6,
+                duration: "5 месяцев",
+                direction: "priznanie",
+                tags: ["Бизнес", "Стартапы", "Образование", "Менторство"],
+                image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1000&auto=format&fit=crop"
+            },
+            {
+                id: 6,
+                title: "Школьная лига по баскетболу",
+                description: "Организация регулярных соревнований между школами города по баскетболу. Нужны тренеры, судьи, волонтеры для организации.",
+                needed: 7,
+                duration: "3 месяца",
+                direction: "sport",
+                tags: ["Спорт", "Баскетбол", "Школьный спорт", "Турнир"],
+                image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1000&auto=format&fit=crop"
+            }
+        ];
+
+        // Текущий режим поиска
+        let currentMode = 'people';
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            generatePeople();
+            generateProjects();
+            
+            // Обработчики для переключения режимов поиска
+            document.querySelectorAll('.search-mode-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const mode = this.getAttribute('data-mode');
+                    switchMode(mode);
+                });
+            });
+            
+            // Обработчики для форм поиска
+            document.getElementById('peopleSearchForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                searchPeople();
+            });
+            
+            document.getElementById('projectsSearchForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                searchProjects();
+            });
+            
+            // Закрытие модальных окон при клике вне окна
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Переключение между режимами поиска
+        function switchMode(mode) {
+            currentMode = mode;
+            
+            // Обновление активной вкладки
+            document.querySelectorAll('.search-mode-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.getAttribute('data-mode') === mode) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            // Показ/скрытие соответствующих элементов
+            if (mode === 'people') {
+                document.getElementById('peopleSearchControls').style.display = 'block';
+                document.getElementById('projectsSearchControls').style.display = 'none';
+                document.getElementById('peopleResults').style.display = 'block';
+                document.getElementById('projectsResults').style.display = 'none';
+            } else {
+                document.getElementById('peopleSearchControls').style.display = 'none';
+                document.getElementById('projectsSearchControls').style.display = 'block';
+                document.getElementById('peopleResults').style.display = 'none';
+                document.getElementById('projectsResults').style.display = 'block';
+            }
+            
+            // Скрываем состояние "нет результатов"
+            document.getElementById('emptyResults').style.display = 'none';
+        }
+
+        // Генерация дополнительных людей
+        function generatePeople() {
+            const container = document.getElementById('peopleList');
+            
+            peopleData.forEach(person => {
+                const personHtml = `
+                    <div class="person-card">
+                        <div class="person-header">
+                            <img src="${person.image}" alt="${person.name}" class="person-avatar">
+                            <div class="person-info">
+                                <h3 class="person-name">${person.name}</h3>
+                                <div class="person-age">${person.age} года</div>
+                                <div class="person-location">
+                                    <span class="material-symbols-outlined" style="font-size: 16px;">location_on</span>
+                                    ${person.city}
+                                </div>
+                                <div class="person-rating">
+                                    <span class="material-symbols-outlined" style="font-size: 16px;">star</span>
+                                    ${person.rating} (${person.reviews} отзывов)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="person-content">
+                            <p class="person-description">${person.description}</p>
+                            
+                            <div class="person-interests">
+                                <div class="interests-title">Интересы:</div>
+                                <div class="interests-list">
+                                    ${person.interests.map(interest => `<span class="interest-tag">${interest}</span>`).join('')}
+                                </div>
+                            </div>
+                            
+                            <div class="person-skills">
+                                <div class="skills-title">Навыки:</div>
+                                <div class="skills-list">
+                                    ${person.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                                </div>
+                            </div>
+                            
+                            <div class="person-actions">
+                                <button class="person-btn primary" onclick="invitePerson(${person.id})">
+                                    <span class="material-symbols-outlined">person_add</span>
+                                    Пригласить
+                                </button>
+                                <button class="person-btn secondary" onclick="viewProfile(${person.id})">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                    Профиль
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                container.insertAdjacentHTML('beforeend', personHtml);
+            });
+            
+            // Обновляем счетчик людей
+            document.getElementById('peopleCount').textContent = 3 + peopleData.length;
+        }
+
+        // Генерация дополнительных проектов
+        function generateProjects() {
+            const container = document.getElementById('projectsList');
+            
+            projectsData.forEach(project => {
+                let directionClass, directionText;
+                switch(project.direction) {
+                    case 'praktika':
+                        directionClass = 'direction-praktika';
+                        directionText = 'Практикуйся';
+                        break;
+                    case 'pobeda':
+                        directionClass = 'direction-pobeda';
+                        directionText = 'Побеждай';
+                        break;
+                    case 'sport':
+                        directionClass = 'direction-sport';
+                        directionText = 'Спорт';
+                        break;
+                    case 'vdohnovenie':
+                        directionClass = 'direction-vdohnovenie';
+                        directionText = 'Вдохновляйся';
+                        break;
+                    case 'razvitie':
+                        directionClass = 'direction-razvitie';
+                        directionText = 'Развивайся';
+                        break;
+                    case 'priznanie':
+                        directionClass = 'direction-priznanie';
+                        directionText = 'Будь признан';
+                        break;
+                }
+                
+                const projectHtml = `
+                    <div class="project-search-card">
+                        <div class="project-search-image">
+                            <img src="${project.image}" alt="${project.title}">
+                            <div class="project-search-badge">Ищет команду</div>
+                        </div>
+                        <div class="project-search-content">
+                            <div class="project-search-header">
+                                <h3 class="project-search-title">${project.title}</h3>
+                                <div class="project-search-status status-looking">Ищет участников</div>
+                            </div>
+                            <p class="project-search-description">${project.description}</p>
+                            
+                            <div class="project-search-meta">
+                                <div class="meta-item">
+                                    <span class="material-symbols-outlined" style="font-size: 16px;">group</span>
+                                    Нужно ${project.needed} человек
+                                </div>
+                                <div class="meta-item">
+                                    <span class="material-symbols-outlined" style="font-size: 16px;">schedule</span>
+                                    ${project.duration}
+                                </div>
+                            </div>
+                            
+                            <div class="project-search-tags">
+                                <span class="project-search-tag direction ${directionClass}">${directionText}</span>
+                                ${project.tags.map(tag => `<span class="project-search-tag">${tag}</span>`).join('')}
+                            </div>
+                            
+                            <div class="project-search-actions">
+                                <button class="person-btn primary" onclick="applyToProject(${project.id})">
+                                    <span class="material-symbols-outlined">send</span>
+                                    Откликнуться
+                                </button>
+                                <button class="person-btn secondary" onclick="viewProject(${project.id})">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                    Подробнее
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                container.insertAdjacentHTML('beforeend', projectHtml);
+            });
+            
+            // Обновляем счетчик проектов
+            document.getElementById('projectsCount').textContent = 3 + projectsData.length;
+        }
+
+        // Поиск людей
+        function searchPeople() {
+            // В реальном приложении здесь был бы AJAX запрос
+            // Показываем состояние загрузки
+            const emptyState = document.getElementById('emptyResults');
+            emptyState.style.display = 'none';
+            
+            // Имитация поиска
+            setTimeout(() => {
+                // В реальном приложении здесь обновление результатов
+                alert('Поиск выполнен. В реальном приложении здесь будут обновленные результаты.');
+            }, 500);
+        }
+
+        // Поиск проектов
+        function searchProjects() {
+            // В реальном приложении здесь был бы AJAX запрос
+            // Показываем состояние загрузки
+            const emptyState = document.getElementById('emptyResults');
+            emptyState.style.display = 'none';
+            
+            // Имитация поиска
+            setTimeout(() => {
+                // В реальном приложении здесь обновление результатов
+                alert('Поиск выполнен. В реальном приложении здесь будут обновленные результаты.');
+            }, 500);
+        }
+
+        // Приглашение человека
+        function invitePerson(personId) {
+            document.getElementById('inviteModal').classList.add('active');
+            // В реальном приложении здесь можно передать ID человека
+        }
+
+        // Просмотр профиля человека
+        function viewProfile(personId) {
+            alert(`Просмотр профиля человека #${personId}. В реальном приложении здесь будет переход на страницу профиля.`);
+            // window.location.href = `profile.html?id=${personId}`;
+        }
+
+        // Отклик на проект
+        function applyToProject(projectId) {
+            document.getElementById('applyModal').classList.add('active');
+            // В реальном приложении здесь можно передать ID проекта
+        }
+
+        // Просмотр проекта
+        function viewProject(projectId) {
+            alert(`Просмотр проекта #${projectId}. В реальном приложении здесь будет переход на страницу проекта.`);
+            // window.location.href = `project.html?id=${projectId}`;
+        }
+
+        // Закрытие модального окна приглашения
+        function closeInviteModal() {
+            document.getElementById('inviteModal').classList.remove('active');
+        }
+
+        // Закрытие модального окна отклика
+        function closeApplyModal() {
+            document.getElementById('applyModal').classList.remove('active');
+        }
+
+        // Отправка приглашения
+        function sendInvitation() {
+            alert('Приглашение успешно отправлено!');
+            closeInviteModal();
+        }
+
+        // Отправка отклика на проект
+        function sendApplication() {
+            alert('Отклик на проект успешно отправлен!');
+            closeApplyModal();
+        }
+
+        // Показ модального окна нового проекта
+        function showNewProjectModal() {
+            alert('Создание нового проекта. В реальном приложении здесь будет переход на создание проекта.');
+            // window.location.href = 'new-project.html';
+        }
+    </script>
+</body>
+</html>
+
+<main
+        </main>

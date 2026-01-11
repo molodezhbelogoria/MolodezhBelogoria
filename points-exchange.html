@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Молодежь Белогорья</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Дополнительные стили для страницы обмена баллов */
+        .points-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            color: white;
+        }
+        
+        .points-balance {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .points-balance span {
+            font-size: 48px;
+            display: block;
+            margin-top: 5px;
+        }
+        
+        .points-info {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .rewards-category {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 30px 0 20px;
+            color: #333;
+        }
+        
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .reward-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .reward-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .reward-image {
+            height: 160px;
+            overflow: hidden;
+        }
+        
+        .reward-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .reward-content {
+            padding: 20px;
+        }
+        
+        .reward-category {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #f0f0f0;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .reward-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 10px;
+            color: #333;
+        }
+        
+        .reward-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .reward-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .reward-points {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ff6b00;
+        }
+        
+        .reward-points span {
+            font-size: 14px;
+            color: #888;
+            display: block;
+            font-weight: normal;
+        }
+        
+        .exchange-btn {
+            padding: 10px 20px;
+            background: #ff6b00;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .exchange-btn:hover {
+            background: #e05a00;
+        }
+        
+        .exchange-btn.disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .exchange-btn.disabled:hover {
+            background: #ccc;
+        }
+        
+        .exchange-btn.success {
+            background: #4CAF50;
+        }
+        
+        .reward-details {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .modal-text {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .modal-btn.confirm {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .modal-btn.cancel {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .history-section {
+            margin-top: 40px;
+        }
+        
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .history-table th,
+        .history-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .history-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .history-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .how-to-earn {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 40px;
+        }
+        
+        .how-to-earn h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .earn-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .earn-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .earn-icon {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .points-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .rewards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .earn-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <span class="material-symbols-outlined menu-icon">menu</span>
+            <div class="logo-container">
+                <div class="logo-text">
+                    <img src="logo.svg" alt="Логотип Молодежь Белогорья" class="logo-img">
+                </div>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="search-box">
+                <div class="search-input-wrapper">
+                    <input type="text" placeholder="Введите запрос">
+                    <span class="material-symbols-outlined" style="color: #606060; font-size: 20px; cursor: pointer; margin-right: 8px;">keyboard</span>
+                </div>
+                <button class="search-btn">
+                    <span class="material-symbols-outlined">search</span>
+                </button>
+                <button class="mic-btn">
+                    <span class="material-symbols-outlined">mic</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <span class="material-symbols-outlined" style="cursor: pointer; color: #606060;">notifications</span>
+            <div class="avatar">A</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside>
+            <div class="sidebar-section">
+                <a href="index.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">home</span>
+                    Главная
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">emoji_events</span> Истории успеха
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">military_tech</span>
+                    Список лидеров
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+              <div class="section-title">Направления</div>
+                <a href="direction.html"  class="sidebar-link dir-praktikuisya" data-direction="praktikuisya">
+                    <span class="material-symbols-outlined">model_training</span>
+                    Практикуйся
+                </a>
+                <a href="direction.html"  class="sidebar-link dir-pobezhdaj" data-direction="pobezhdaj">
+                    <span class="material-symbols-outlined">workspace_premium</span>
+                    Побеждай
+                </a>
+                <a href="direction.html"  class="sidebar-link dir-sport" data-direction="sport">
+                    <span class="material-symbols-outlined">sports_basketball</span>
+                    Спорт
+                </a>
+                <a href="direction.html"  class="sidebar-link dir-vdohnovlyajsya" data-direction="vdohnovlyajsya">
+                    <span class="material-symbols-outlined">auto_awesome</span>
+                    Вдохновляйся
+                </a>
+                <a href="direction.html"  class="sidebar-link dir-razvivajsya" data-direction="razvivajsya">
+                    <span class="material-symbols-outlined">lightbulb</span>
+                    Развивайся
+                </a>
+                <a href="direction.html" class="sidebar-link dir-bud-priznan" data-direction="bud-priznan">
+                    <span class="material-symbols-outlined">stars</span>
+                    Будь признан
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <a href="profile.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">account_circle</span>
+                    Профиль
+                </a>
+                <a href="applications.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">description</span>
+                    Заявки
+                </a>
+                <a href="projects.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">account_tree</span>
+                    Мои проекты
+                </a>
+                <a href="points-exchange.html" class="sidebar-link active">
+                    <span class="material-symbols-outlined">redeem</span>
+                    Обмен баллов
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">Навигатор</div>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">theater_comedy</span>
+                    Культурные мероприятия
+                </a>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">fitness_center</span>
+                    Спорт
+                </a>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">school</span>
+                    ДПО организации
+                </a>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">explore</span>
+                    Возможности самореализации
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <div class="section-title">Другие возможности</div>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined" style="color: #00ff11;">smart_toy</span>
+                    Ai куратор
+                </a>
+                <a href="searching.html" class="sidebar-link">
+                    <span class="material-symbols-outlined" style="color: #0055ff;">group_add</span>
+                    Найти команду в проект
+                </a>
+                    <a href="searchnastavnik.html" class="sidebar-link">
+                    <span class="material-symbols-outlined" style="color: #ff00aa;">group_add</span>
+                    Найти наставника
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">settings</span>
+                    Настройки
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">help_outline</span>
+                    Справка
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">mail</span>
+                    Связаться с нами
+                </a>
+            </div>
+
+            <div class="sidebar-section no-border">
+                <div class="footer-links">
+                    <a href="#">О проекте</a>
+                    <a href="#">Направления</a>
+                    <a href="#">Связаться с нами</a>
+                    <a href="#">Организация</a>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Условия</a>
+                    <a href="#">Конфиденциальность</a>
+                </div>
+                <div class="copyright">
+                    © 2026 MolodezhBelogoria
+                </div>
+            </div>
+        </aside>
+
+        <main>
+            <!-- Заголовок с балансом -->
+            <div class="points-header">
+                <div>
+                    <div class="points-balance">
+                        Ваш баланс:
+                        <span id="currentPoints">1,850</span>
+                    </div>
+                    <div class="points-info">
+                        Баллы начисляются за участие в мероприятиях, победы в конкурсах и активность на платформе
+                    </div>
+                </div>
+                <div>
+                    <button class="exchange-btn" style="background: white; color: #667eea;" onclick="window.location.href='profile.html#points-history'">
+                        История начислений
+                    </button>
+                </div>
+            </div>
+
+            <!-- Фильтры категорий -->
+            <div class="chips-container">
+                <div class="chip active" data-category="all">Все награды</div>
+                <div class="chip" data-category="travel">Поездки</div>
+                <div class="chip" data-category="culture">Культура</div>
+                <div class="chip" data-category="education">Образование</div>
+                <div class="chip" data-category="souvenirs">Сувениры</div>
+                <div class="chip" data-category="special">Специальные</div>
+            </div>
+
+            <!-- Путешествия -->
+            <h2 class="rewards-category">Путешествия и поездки</h2>
+            <div class="rewards-grid">
+                <div class="reward-card" data-category="travel">
+                    <div class="reward-image">
+                        <img src="https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Путешествие">
+                    </div>
+                    <div class="reward-content">
+                        <div class="reward-category">Поездка</div>
+                        <h3 class="reward-title">Путешествие в Москву</h3>
+                        <p class="reward-description">3-дневная поездка в столицу с экскурсиями по главным достопримечательностям</p>
+                        <div class="reward-meta">
+                            <div class="reward-points">
+                                5,000 баллов
+                                <span>Осталось: 5 мест</span>
+                            </div>
+                            <button class="exchange-btn" onclick="exchangeReward(5000, 'Путешествие в Москву')">
+                                Обменять
+                            </button>
+                        </div>
+                        <div class="reward-details">Включено: проживание, питание, экскурсии</div>
+                    </div>
+                </div>
+
+                <div class="reward-card" data-category="travel">
+                    <div class="reward-image">
+                        <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Экскурсия">
+                    </div>
+                    <div class="reward-content">
+                        <div class="reward-category">Экскурсия</div>
+                        <h3 class="reward-title">Экскурсия по Белгородской области</h3>
+                        <p class="reward-description">Автобусная экскурсия по историческим местам региона</p>
+                        <div class="reward-meta">
+                            <div class="reward-points">
+                                800 баллов
+                                <span>Осталось: 12 мест</span>
+                            </div>
+                            <button class="exchange-btn" onclick="exchangeReward(800, 'Экскурсия по Белгородской области')">
+                                Обменять
+                            </button>
+                        </div>
+                        <div class="reward-details">Дата: каждую субботу</div>
+                    </div>
+                </div>
+
+                <div class="reward-card" data-category="travel">
+                    <div class="reward-image">
+                        <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Санкт-Петербург">
+                    </div>
+                    <div class="reward-content">
+                        <div class="reward-category">Поездка</div>
+                        <h3 class="reward-title">Уикенд в Санкт-Петербурге</h3>
+                        <p class="reward-description">2-дневная культурная поездка в Северную столицу</p>
+                        <div class="reward-meta">
+                            <div class="reward-points">
+                                4,200 баллов
+                                <span>Осталось: 3 места</span>
+                            </div>
+                            <button class="exchange-btn" onclick="exchangeReward(4200, 'Уикенд в Санкт-Петербурге')">
+                                Обменять
+                            </button>
+                        </div>
+                        <div class="reward-details">Включено: проезд, проживание</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Культура и развлечения -->
+            <h2 class="rewards-category">Культура и развлечения</h2>
+            <div class="rewards-grid">
+                <div class="reward-card" data-category="culture">
+                    <div class="reward-image">
+                        <img src="https://images.unsplash.com/photo-1489599809516-9827b6d1cf13?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Кино">
+                    </div>
+                    <div class="reward-content">
+                        <div class="reward-category">Билет</div>
+                        <h3 class="reward-title">Билет в кино</h3>
+                        <p class="reward-description">Пригласительный билет в любой кинотеатр города</p>
+                        <div class="reward-meta">
+                            <div class="reward-points">
+                                200 баллов
+                                <span>Безлимитно</span>
+                            </div>
+                            <button class="exchange-btn" onclick="exchangeReward(200, 'Билет в кино')">
+                                Обменять
+                            </button>
+                        </div>
+                        <div class="reward-details">Действителен 30 дней</div>
+                    </div>
+                </div>
+
+                <div class="reward-card" data-category="culture">
+                    <div class="reward-image">
+                        <img src="https://images.unsplash.com/photo-1492684223066-e9e5a0c2b08d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Театр">
+                    </div>
+                    <div class="reward-content">
+                        <div class="reward-category">Билет</div>
+                        <h3 class="reward-title">Билет на спектакль</h3>
+                        <p class="reward-description">Пригласительный на любой спектакль в театрах города</p>
+                        <div class="reward-meta">
+                            <div class="reward-points">
+                                300 баллов
+                                <span>Осталось: 25 билетов</span>
+                            </div>
+                            <button class="exchange-btn" onclick="exchangeReward(300, 'Билет на спектакль')">
+                                Обменять
+                            </button>
+                        </div>
+                        <div class="reward-details">По предварительной регистрации</div>
+                    </div>
+                </div>
+
+                <div class="reward-card" data-category="culture">
+                    <div class="reward-image">
+                        <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Концерт">
+                    </div>
+                    <div class="reward-content">
+                        <div class="reward-category">Билет</div>
+                        <h3 class="reward-title">Билет на концерт</h3>
+                        <p class="reward-description">Пригласительный на концерты местных исполнителей</p>
+                        <div class="reward-meta">
+                            <div class="reward-points">
+                                250 баллов
+                                <span>Осталось: 18 билетов</span>
+                            </div>
+                            <button class="exchange-btn" onclick="exchangeReward(250, 'Билет на концерт')">
+                                Обменять
+                            </button>
+                        </div>
+                        <div class="reward-details">Расписание на сайте</div>
+                    </div>
+                </div>
+
+                <div class="reward-card" data-category="culture">
+                    <div class="reward-image">
+                        <img src="https://images.unsplash.com/photo-1536922246289-88c42f957773?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Музей">
+                    </div>
+                    <div class="reward-content">
+                        <div class="reward-category">Билет</div>
+                        <h3 class="reward-title">Бесплатное посещение музеев</h3>
+                        <p class="reward-description">Карта для бесплатного посещения 5 музеев области</p>
+                        <div class="reward-meta">
+                            <div class="reward-points">
+                                400 баллов
+                                <span>Безлимитно</span>
+                            </div>
+                            <button class="exchange-btn" onclick="exchangeReward(400, 'Карта посещения музеев')">
+                                Обменять
+                            </button>
+                        </div>
+                        <div class="reward-details">Действительна 6 месяцев</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Образование и развитие -->
+            <h2 class="rewards-category">Образование и развитие</h2>
+            <div class="rewards-grid">
+                <div class="reward-card" data-category="education">
+                    <div class="reward-image">
+                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Курсы">
+                    </div>
+                    <div class="reward-content">
+                        <div class="reward-category">Курс</div>
+                        <h3 class="reward-title">Онлайн-курс по выбору</h3>
+                        <p class="reward-description">Доступ к любому курсу на образовательных платформах</p>
+                        <div class="reward-meta">
+                            <div class="reward-points">
+                                1,000 баллов
+                                <span>Безлимитно</span>
+                            </div>
+                            <button class="exchange-btn" onclick="exchangeReward(1000, 'Онлайн-курс по выбору')">
+                                Обменять
+                            </button>
+                        </div>
+                        <div class="reward-details">Выбор из 50+ курсов</div>
+                    </div>
+                </div>
+
+                <div class="reward-card" data-category="education">
+                    <div class="reward-image">
+                        <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Книги">
+                    </div>
+                    <div class="reward-content">
+                        <div class="reward-category">Книги</div>
+                        <h3 class="reward-title">Подписка на книжный сервис</h3>
+                        <p class="reward-description">3-месячная подписка на электронную библиотеку</p>
+                        <div class="reward-meta">
+                            <div class="reward-points">
+                                600 баллов
+                                <span>Безлимитно</span>
+                            </div>
+                            <button class="exchange-btn" onclick="exchangeReward(600, 'Подписка на книжный сервис')">
+                                Обменять
+                            </button>
+                        </div>
+                        <div class="reward-details">Более 50,000 книг</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- История обменов -->
+            <div class="history-section">
+                <h3>История обменов</h3>
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Дата</th>
+                            <th>Награда</th>
+                            <th>Баллов</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>10.01.2026</td>
+                            <td>Билет в кино</td>
+                            <td>200</td>
+                            <td><span class="history-status status-success">Использован</span></td>
+                        </tr>
+                        <tr>
+                            <td>05.01.2026</td>
+                            <td>Билет на спектакль</td>
+                            <td>300</td>
+                            <td><span class="history-status status-success">Использован</span></td>
+                        </tr>
+                        <tr>
+                            <td>28.12.2025</td>
+                            <td>Онлайн-курс</td>
+                            <td>1,000</td>
+                            <td><span class="history-status status-pending">В процессе</span></td>
+                        </tr>
+                        <tr>
+                            <td>15.12.2025</td>
+                            <td>Карта музеев</td>
+                            <td>400</td>
+                            <td><span class="history-status status-success">Активна</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Модальное окно подтверждения -->
+    <div id="exchangeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">Подтверждение обмена</div>
+            <div class="modal-text">
+                Вы действительно хотите обменять <span id="modalPoints">0</span> баллов на награду "<span id="modalReward">...</span>"?
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="closeModal()">Отмена</button>
+                <button class="modal-btn confirm" onclick="confirmExchange()">Подтвердить</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Текущие баллы пользователя
+        let currentPoints = 1850;
+        let selectedRewardPoints = 0;
+        let selectedRewardName = '';
+        
+        // Функция для обмена баллов
+        function exchangeReward(points, name) {
+            if (points > currentPoints) {
+                alert('Недостаточно баллов для обмена!');
+                return;
+            }
+            
+            selectedRewardPoints = points;
+            selectedRewardName = name;
+            
+            document.getElementById('modalPoints').textContent = points.toLocaleString();
+            document.getElementById('modalReward').textContent = name;
+            document.getElementById('exchangeModal').style.display = 'flex';
+        }
+        
+        // Подтверждение обмена
+        function confirmExchange() {
+            currentPoints -= selectedRewardPoints;
+            document.getElementById('currentPoints').textContent = currentPoints.toLocaleString();
+            
+            // Обновляем кнопки, если баллов недостаточно
+            updateExchangeButtons();
+            
+            // Показываем уведомление
+            alert(`Успешно! Вы обменяли ${selectedRewardPoints} баллов на "${selectedRewardName}". Подробности отправлены на вашу почту.`);
+            
+            closeModal();
+            
+            // Здесь можно добавить отправку данных на сервер
+            // sendExchangeToServer(selectedRewardPoints, selectedRewardName);
+        }
+        
+        // Закрытие модального окна
+        function closeModal() {
+            document.getElementById('exchangeModal').style.display = 'none';
+        }
+        
+        // Обновление состояния кнопок обмена
+        function updateExchangeButtons() {
+            document.querySelectorAll('.exchange-btn').forEach(btn => {
+                const card = btn.closest('.reward-card');
+                const pointsElement = card.querySelector('.reward-points');
+                const pointsText = pointsElement.textContent;
+                const points = parseInt(pointsText.replace(/\D/g, ''));
+                
+                if (points > currentPoints) {
+                    btn.classList.add('disabled');
+                    btn.textContent = 'Недостаточно баллов';
+                    btn.onclick = null;
+                } else {
+                    btn.classList.remove('disabled');
+                    btn.textContent = 'Обменять';
+                    const rewardName = card.querySelector('.reward-title').textContent;
+                    btn.onclick = () => exchangeReward(points, rewardName);
+                }
+            });
+        }
+        
+        // Фильтрация по категориям
+        document.querySelectorAll('.chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                // Убираем активный класс у всех чипсов
+                document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                // Добавляем активный класс текущему
+                this.classList.add('active');
+                
+                const category = this.dataset.category;
+                const cards = document.querySelectorAll('.reward-card');
+                
+                cards.forEach(card => {
+                    if (category === 'all' || card.dataset.category === category) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Закрытие модального окна при клике вне его
+        window.onclick = function(event) {
+            const modal = document.getElementById('exchangeModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+        
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            updateExchangeButtons();
+        });
+    </script>
+</body>
+</html>

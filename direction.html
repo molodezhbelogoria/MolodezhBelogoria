@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Молодежь Белогорья</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Специфичные стили для страницы направлений */
+        .direction-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .direction-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .direction-header {
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid var(--separator);
+        }
+        
+        .direction-title {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--text-main);
+            font-family: 'Oswald', sans-serif;
+            margin-bottom: 16px;
+            line-height: 1.1;
+        }
+        
+        .direction-icon-title {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 16px;
+        }
+        
+        .direction-icon-title .material-symbols-outlined {
+            font-size: 48px;
+        }
+        
+        .direction-description {
+            font-size: 20px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 800px;
+        }
+        
+        .direction-stats {
+            display: flex;
+            gap: 32px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+        
+        .direction-stat {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-value {
+            font-size: 36px;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .events-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .events-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-main);
+            font-family: 'Oswald', sans-serif;
+        }
+        
+        .events-filters {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .events-filter {
+            padding: 8px 16px;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .events-filter:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .events-filter.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+        
+        .event-card-large {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--separator);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .event-card-large:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+            border-color: var(--primary-light);
+        }
+        
+        .event-image {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .event-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .event-card-large:hover .event-image img {
+            transform: scale(1.05);
+        }
+        
+        .event-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .badge-online {
+            background: var(--primary);
+        }
+        
+        .badge-offline {
+            background: var(--success);
+        }
+        
+        .badge-hybrid {
+            background: var(--purple);
+        }
+        
+        .event-content {
+            padding: 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .event-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .event-date {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .event-format {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .event-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        
+        .event-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 20px;
+            flex: 1;
+        }
+        
+        .event-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .event-tag {
+            padding: 4px 10px;
+            background: var(--bg-light);
+            color: var(--text-main);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .event-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: auto;
+        }
+        
+        .event-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        
+        .event-btn.primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+        }
+        
+        .event-btn.primary:hover {
+            background: #0052a3;
+        }
+        
+        .event-btn.secondary {
+            background: white;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+        
+        .event-btn.secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .empty-events {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 16px;
+            border: 2px dashed var(--separator);
+            grid-column: 1 / -1;
+        }
+        
+        .empty-events .material-symbols-outlined {
+            font-size: 64px;
+            margin-bottom: 16px;
+            color: var(--separator);
+        }
+        
+        .empty-events h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+        
+        .empty-events p {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .upcoming-events {
+            margin-top: 48px;
+        }
+        
+        .upcoming-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--text-main);
+            font-family: 'Oswald', sans-serif;
+        }
+        
+        .upcoming-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .upcoming-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--separator);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        
+        .upcoming-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .upcoming-date {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+        
+        .upcoming-title-small {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        
+        .upcoming-meta {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+        
+        .upcoming-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            background: var(--bg-light);
+            color: var(--text-main);
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 1200px) {
+            .events-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+            
+            .direction-title {
+                font-size: 42px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .direction-title {
+                font-size: 36px;
+            }
+            
+            .direction-description {
+                font-size: 18px;
+            }
+            
+            .events-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .direction-title {
+                font-size: 32px;
+            }
+            
+            .direction-icon-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            
+            .direction-stats {
+                gap: 20px;
+            }
+            
+            .stat-value {
+                font-size: 28px;
+            }
+            
+            .events-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .events-filters {
+                width: 100%;
+                overflow-x: auto;
+                padding-bottom: 8px;
+            }
+            
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .upcoming-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .direction-title {
+                font-size: 28px;
+            }
+            
+            .direction-description {
+                font-size: 16px;
+            }
+            
+            .events-title {
+                font-size: 24px;
+            }
+            
+            .event-actions {
+                flex-direction: column;
+            }
+            
+            .event-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <span class="material-symbols-outlined menu-icon">menu</span>
+            <div class="logo-container" onclick="window.location.href='index.html'">
+                <div class="logo-text">
+                    <img src="logo.svg" alt="Логотип Молодежь Белогорья" class="logo-img">
+                </div>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="search-box">
+                <div class="search-input-wrapper">
+                    <input type="text" placeholder="Введите запрос">
+                    <span class="material-symbols-outlined" style="color: #606060; font-size: 20px; cursor: pointer; margin-right: 8px;">keyboard</span>
+                </div>
+                <button class="search-btn">
+                    <span class="material-symbols-outlined">search</span>
+                </button>
+                <button class="mic-btn">
+                    <span class="material-symbols-outlined">mic</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <span class="material-symbols-outlined" style="cursor: pointer; color: #606060;">notifications</span>
+            <div class="avatar">A</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Боковое меню только с направлениями как вкладками -->
+        <aside>
+            <div class="sidebar-section">
+                <a href="index.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">home</span>
+                    Главная
+                </a>
+                <a href="success-stories.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">emoji_events</span> Истории успеха
+                </a>
+                <a href="leaderboard.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">military_tech</span>
+                    Список лидеров
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+              <div class="section-title">Направления</div>
+                <a href="direction.html"  class="sidebar-link dir-praktikuisya active" data-direction="praktikuisya">
+                    <span class="material-symbols-outlined">model_training</span>
+                    Практикуйся
+                </a>
+                <a href="direction.html"  class="sidebar-link dir-pobezhdaj" data-direction="pobezhdaj">
+                    <span class="material-symbols-outlined">workspace_premium</span>
+                    Побеждай
+                </a>
+                <a href="direction.html"  class="sidebar-link dir-sport" data-direction="sport">
+                    <span class="material-symbols-outlined">sports_basketball</span>
+                    Спорт
+                </a>
+                <a href="direction.html"  class="sidebar-link dir-vdohnovlyajsya" data-direction="vdohnovlyajsya">
+                    <span class="material-symbols-outlined">auto_awesome</span>
+                    Вдохновляйся
+                </a>
+                <a href="direction.html"  class="sidebar-link dir-razvivajsya" data-direction="razvivajsya">
+                    <span class="material-symbols-outlined">lightbulb</span>
+                    Развивайся
+                </a>
+                <a href="direction.html" class="sidebar-link dir-bud-priznan" data-direction="bud-priznan">
+                    <span class="material-symbols-outlined">stars</span>
+                    Будь признан
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <a href="profile.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">account_circle</span>
+                    Профиль
+                </a>
+                <a href="applications.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">description</span>
+                    Заявки
+                </a>
+                <a href="projects.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">account_tree</span>
+                    Мои проекты
+                </a>
+                <a href="points-exchange.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">redeem</span>
+                    Обмен баллов
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">Навигатор</div>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">theater_comedy</span>
+                    Культурные мероприятия
+                </a>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">fitness_center</span>
+                    Спорт
+                </a>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">school</span>
+                    ДПО организации
+                </a>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">explore</span>
+                    Возможности самореализации
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <a href="profile.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">account_circle</span>
+                    Профиль
+                </a>
+                <a href="applications.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">description</span>
+                    Заявки
+                </a>
+                <a href="projects.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">account_tree</span>
+                    Мои проекты
+                </a>
+                <a href="points-exchange.html" class="sidebar-link active">
+                    <span class="material-symbols-outlined">redeem</span>
+                    Обмен баллов
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">Другие возможности</div>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined" style="color: #00ff11;">smart_toy</span>
+                    Ai куратор
+                </a>
+                <a href="searching.html" class="sidebar-link">
+                    <span class="material-symbols-outlined" style="color: #0055ff;">group_add</span>
+                    Найти команду в проект
+                </a>
+                    <a href="searchnastavnik.html" class="sidebar-link">
+                    <span class="material-symbols-outlined" style="color: #ff00aa;">group_add</span>
+                    Найти наставника
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">settings</span>
+                    Настройки
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">help_outline</span>
+                    Справка
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">mail</span>
+                    Связаться с нами
+                </a>
+            </div>
+
+            <div class="sidebar-section no-border">
+                <div class="footer-links">
+                    <a href="#">О проекте</a>
+                    <a href="#">Направления</a>
+                    <a href="#">Связаться с нами</a>
+                    <a href="#">Организация</a>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Условия</a>
+                    <a href="#">Конфиденциальность</a>
+                </div>
+                <div class="copyright">
+                    © 2026 MolodezhBelogoria
+                </div>
+            </div>
+        </aside>
+
+        <main style="background-color: #f9f9f9; padding: 24px;">
+            <!-- Контент направления: Практикуйся -->
+            <div class="direction-content active" id="praktikuisya">
+                <div class="direction-header">
+                    <div class="direction-icon-title">
+                        <span class="material-symbols-outlined" style="color: var(--dir-praktikuisya);">model_training</span>
+                        <h1 class="direction-title">Практикуйся</h1>
+                    </div>
+                    <p class="direction-description">
+                        Получай практический опыт через стажировки, мастер-классы и реальные проекты. 
+                        Развивай профессиональные навыки под руководством экспертов в IT, дизайне, маркетинге и других сферах. 
+                        Участвуй в хакатонах, воркшопах и практических сессиях для оттачивания своих умений.
+                    </p>
+                    <div class="direction-stats">
+                        <div class="direction-stat">
+                            <div class="stat-value" style="color: var(--dir-praktikuisya);">42</div>
+                            <div class="stat-label">Мероприятия</div>
+                        </div>
+                        <div class="direction-stat">
+                            <div class="stat-value" style="color: var(--dir-praktikuisya);">856</div>
+                            <div class="stat-label">Участников</div>
+                        </div>
+                        <div class="direction-stat">
+                            <div class="stat-value" style="color: var(--dir-praktikuisya);">28</div>
+                            <div class="stat-label">Партнеров</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="events-section">
+                    <div class="events-header">
+                        <h2 class="events-title">Мероприятия направления</h2>
+                        <div class="events-filters">
+                            <button class="events-filter active">Все</button>
+                            <button class="events-filter">Стажировки</button>
+                            <button class="events-filter">Мастер-классы</button>
+                            <button class="events-filter">Хакатоны</button>
+                        </div>
+                    </div>
+
+                    <div class="events-grid">
+                        <div class="event-card-large">
+                            <div class="event-image">
+                                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?q=80&w=1000&auto=format&fit=crop" alt="Хакатон">
+                                <div class="event-badge badge-hybrid">Гибрид</div>
+                            </div>
+                            <div class="event-content">
+                                <div class="event-meta">
+                                    <div class="event-date">
+                                        <span class="material-symbols-outlined">calendar_month</span>
+                                        25-27 марта 2025
+                                    </div>
+                                    <div class="event-format" style="background: rgba(88, 86, 214, 0.1); color: var(--purple);">
+                                        Хакатон
+                                    </div>
+                                </div>
+                                <h3 class="event-title">Хакатон: Цифровой прорыв 2025</h3>
+                                <p class="event-description">
+                                    48-часовой марафон по созданию IT-решений для социальных проблем. 
+                                    Командная работа с менторами из ведущих IT-компаний.
+                                </p>
+                                <div class="event-tags">
+                                    <span class="event-tag">Программирование</span>
+                                    <span class="event-tag">Командная работа</span>
+                                    <span class="event-tag">IT</span>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="event-btn primary" onclick="window.location.href='event-details.html'">
+                                        <span class="material-symbols-outlined">how_to_reg</span>
+                                        Участвовать
+                                    </button>
+                                    <button class="event-btn secondary">
+                                        <span class="material-symbols-outlined">info</span>
+                                        Подробнее
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="event-card-large">
+                            <div class="event-image">
+                                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1000&auto=format&fit=crop" alt="Стажировка">
+                                <div class="event-badge badge-offline">Офлайн</div>
+                            </div>
+                            <div class="event-content">
+                                <div class="event-meta">
+                                    <div class="event-date">
+                                        <span class="material-symbols-outlined">calendar_month</span>
+                                        12 апреля - 12 июля 2025
+                                    </div>
+                                    <div class="event-format" style="background: rgba(0, 168, 107, 0.1); color: var(--success);">
+                                        Стажировка
+                                    </div>
+                                </div>
+                                <h3 class="event-title">Оплачиваемая стажировка для Frontend-разработчиков</h3>
+                                <p class="event-description">
+                                    3-месячная стажировка в IT-компании "ТехноСофт". 
+                                    Работа над реальными проектами под руководством опытных разработчиков.
+                                </p>
+                                <div class="event-tags">
+                                    <span class="event-tag">Frontend</span>
+                                    <span class="event-tag">React</span>
+                                    <span class="event-tag">Оплачиваемая</span>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="event-btn primary" onclick="window.location.href='event-details.html'">
+                                        <span class="material-symbols-outlined">how_to_reg</span>
+                                        Подать заявку
+                                    </button>
+                                    <button class="event-btn secondary">
+                                        <span class="material-symbols-outlined">info</span>
+                                        Подробнее
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="event-card-large">
+                            <div class="event-image">
+                                <img src="https://images.unsplash.com/photo-1545235617-9465d2a55698?q=80&w=1000&auto=format&fit=crop" alt="Мастер-класс">
+                                <div class="event-badge badge-online">Онлайн</div>
+                            </div>
+                            <div class="event-content">
+                                <div class="event-meta">
+                                    <div class="event-date">
+                                        <span class="material-symbols-outlined">calendar_month</span>
+                                        15 апреля 2025, 18:00
+                                    </div>
+                                    <div class="event-format" style="background: rgba(0, 102, 204, 0.1); color: var(--primary);">
+                                        Мастер-класс
+                                    </div>
+                                </div>
+                                <h3 class="event-title">Мастер-класс: Нейросети для создания контента</h3>
+                                <p class="event-description">
+                                    Практическое занятие по использованию AI-инструментов для генерации текста, 
+                                    изображений и видео. От экспертов Сбера.
+                                </p>
+                                <div class="event-tags">
+                                    <span class="event-tag">AI</span>
+                                    <span class="event-tag">Нейросети</span>
+                                    <span class="event-tag">Контент</span>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="event-btn primary" onclick="window.location.href='event-details.html'">
+                                        <span class="material-symbols-outlined">how_to_reg</span>
+                                        Записаться
+                                    </button>
+                                    <button class="event-btn secondary">
+                                        <span class="material-symbols-outlined">info</span>
+                                        Подробнее
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Контент направления: Побеждай -->
+            <div class="direction-content" id="pobezhdaj">
+                <div class="direction-header">
+                    <div class="direction-icon-title">
+                        <span class="material-symbols-outlined" style="color: var(--dir-pobezhdaj);">workspace_premium</span>
+                        <h1 class="direction-title">Побеждай</h1>
+                    </div>
+                    <p class="direction-description">
+                        Участвуй в конкурсах, олимпиадах и грантовых программах. 
+                        Покажи свои способности и получи заслуженное признание и поддержку. 
+                        Это направление для тех, кто хочет доказать свои навыки на практике и получить финансирование для своих проектов.
+                    </p>
+                    <div class="direction-stats">
+                        <div class="direction-stat">
+                            <div class="stat-value" style="color: var(--dir-pobezhdaj);">15М+</div>
+                            <div class="stat-label">Рублей грантов</div>
+                        </div>
+                        <div class="direction-stat">
+                            <div class="stat-value" style="color: var(--dir-pobezhdaj);">312</div>
+                            <div class="stat-label">Победителей</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="events-section">
+                    <div class="events-header">
+                        <h2 class="events-title">Мероприятия направления</h2>
+                        <div class="events-filters">
+                            <button class="events-filter active">Все</button>
+                            <button class="events-filter">Гранты</button>
+                            <button class="events-filter">Конкурсы</button>
+                            <button class="events-filter">Олимпиады</button>
+                        </div>
+                    </div>
+
+                    <div class="events-grid">
+                        <div class="event-card-large">
+                            <div class="event-image">
+                                <img src="https://images.unsplash.com/photo-1551818255-e6e10975bc17?q=80&w=1000&auto=format&fit=crop" alt="Гранты">
+                                <div class="event-badge badge-online">Онлайн</div>
+                            </div>
+                            <div class="event-content">
+                                <div class="event-meta">
+                                    <div class="event-date">
+                                        <span class="material-symbols-outlined">calendar_month</span>
+                                        до 20 апреля 2025
+                                    </div>
+                                    <div class="event-format" style="background: rgba(0, 102, 204, 0.1); color: var(--primary);">
+                                        Грантовый конкурс
+                                    </div>
+                                </div>
+                                <h3 class="event-title">Росмолодежь.Гранты: 1 сезон 2025</h3>
+                                <p class="event-description">
+                                    Прием заявок на реализацию проектов по 13 номинациям. 
+                                    Максимальный размер гранта - 1.5 млн рублей для физических лиц.
+                                </p>
+                                <div class="event-tags">
+                                    <span class="event-tag">Грант</span>
+                                    <span class="event-tag">Финансирование</span>
+                                    <span class="event-tag">Проекты</span>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="event-btn primary" onclick="window.location.href='event-details.html'">
+                                        <span class="material-symbols-outlined">how_to_reg</span>
+                                        Подать заявку
+                                    </button>
+                                    <button class="event-btn secondary">
+                                        <span class="material-symbols-outlined">info</span>
+                                        Подробнее
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="event-card-large">
+                            <div class="event-image">
+                                <img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=1000&auto=format&fit=crop" alt="Конкурс">
+                                <div class="event-badge badge-offline">Офлайн</div>
+                            </div>
+                            <div class="event-content">
+                                <div class="event-meta">
+                                    <div class="event-date">
+                                        <span class="material-symbols-outlined">calendar_month</span>
+                                        15 мая 2025
+                                    </div>
+                                    <div class="event-format" style="background: rgba(0, 168, 107, 0.1); color: var(--success);">
+                                        Конкурс
+                                    </div>
+                                </div>
+                                <h3 class="event-title">Конкурс "Инношкольник" - финал 2025</h3>
+                                <p class="event-description">
+                                    Финал всероссийского конкурса инновационных проектов школьников. 
+                                    Победители получат гранты на реализацию и путевки в "Сириус".
+                                </p>
+                                <div class="event-tags">
+                                    <span class="event-tag">Инновации</span>
+                                    <span class="event-tag">Школьники</span>
+                                    <span class="event-tag">Наука</span>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="event-btn primary" onclick="window.location.href='event-details.html'">
+                                        <span class="material-symbols-outlined">how_to_reg</span>
+                                        Участвовать
+                                    </button>
+                                    <button class="event-btn secondary">
+                                        <span class="material-symbols-outlined">info</span>
+                                        Подробнее
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="event-card-large">
+                            <div class="event-image">
+                                <img src="https://images.unsplash.com/photo-1526726538690-5cbf956ae2fd?q=80&w=1000&auto=format&fit=crop" alt="Грантовый конкурс">
+                                <div class="event-badge badge-hybrid">Гибрид</div>
+                            </div>
+                            <div class="event-content">
+                                <div class="event-meta">
+                                    <div class="event-date">
+                                        <span class="material-symbols-outlined">calendar_month</span>
+                                        до 30 апреля 2025
+                                    </div>
+                                    <div class="event-format" style="background: rgba(88, 86, 214, 0.1); color: var(--purple);">
+                                        Грантовый конкурс
+                                    </div>
+                                </div>
+                                <h3 class="event-title">Грантовый конкурс "Твой ход" 2025</h3>
+                                <p class="event-description">
+                                    Конкурс проектов по развитию студенческих сообществ и инициатив. 
+                                    Победители получат до 500 тыс. рублей на реализацию.
+                                </p>
+                                <div class="event-tags">
+                                    <span class="event-tag">Студенты</span>
+                                    <span class="event-tag">Сообщества</span>
+                                    <span class="event-tag">Инициативы</span>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="event-btn primary" onclick="window.location.href='event-details.html'">
+                                        <span class="material-symbols-outlined">how_to_reg</span>
+                                        Подать заявку
+                                    </button>
+                                    <button class="event-btn secondary">
+                                        <span class="material-symbols-outlined">info</span>
+                                        Подробнее
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Контент направления: Спорт -->
+            <div class="direction-content" id="sport">
+                <div class="direction-header">
+                    <div class="direction-icon-title">
+                        <span class="material-symbols-outlined" style="color: var(--dir-sport);">sports_basketball</span>
+                        <h1 class="direction-title">Спорт</h1>
+                    </div>
+                    <p class="direction-description">
+                        Развивай физические способности, участвуй в спортивных мероприятиях и соревнованиях. 
+                        Поддерживай здоровый образ жизни и находи единомышленников. 
+                        От любительских турниров до серьезных соревнований - выбирай то, что подходит именно тебе.
+                    </p>
+                </div>
+
+                <div class="events-section">
+                    <div class="events-header">
+                        <h2 class="events-title">Мероприятия направления</h2>
+                        <div class="events-filters">
+                            <button class="events-filter active">Все</button>
+                            <button class="events-filter">Забеги</button>
+                            <button class="events-filter">Турниры</button>
+                            <button class="events-filter">Тренировки</button>
+                        </div>
+                    </div>
+
+                    <div class="events-grid">
+                        <div class="event-card-large">
+                            <div class="event-image">
+                                <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=1000&auto=format&fit=crop" alt="Марафон">
+                                <div class="event-badge badge-offline">Офлайн</div>
+                            </div>
+                            <div class="event-content">
+                                <div class="event-meta">
+                                    <div class="event-date">
+                                        <span class="material-symbols-outlined">calendar_month</span>
+                                        1 июня 2025
+                                    </div>
+                                    <div class="event-format" style="background: rgba(255, 152, 0, 0.1); color: var(--dir-sport);">
+                                        Марафон
+                                    </div>
+                                </div>
+                                <h3 class="event-title">Марафон "Бегущие сердца" 2025</h3>
+                                <p class="event-description">
+                                    Благотворительный спортивный марафон на дистанции 5, 10 и 21 км. 
+                                    Все собранные средства направляются на помощь детям с сердечными заболеваниями.
+                                </p>
+                                <div class="event-tags">
+                                    <span class="event-tag">Бег</span>
+                                    <span class="event-tag">Благотворительность</span>
+                                    <span class="event-tag">ЗОЖ</span>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="event-btn primary" onclick="window.location.href='event-details.html'">
+                                        <span class="material-symbols-outlined">how_to_reg</span>
+                                        Зарегистрироваться
+                                    </button>
+                                    <button class="event-btn secondary">
+                                        <span class="material-symbols-outlined">info</span>
+                                        Подробнее
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="event-card-large">
+                            <div class="event-image">
+                                <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=1000&auto=format&fit=crop" alt="Баскетбол">
+                                <div class="event-badge badge-offline">Офлайн</div>
+                            </div>
+                            <div class="event-content">
+                                <div class="event-meta">
+                                    <div class="event-date">
+                                        <span class="material-symbols-outlined">calendar_month</span>
+                                        10 мая 2025
+                                    </div>
+                                    <div class="event-format" style="background: rgba(255, 152, 0, 0.1); color: var(--dir-sport);">
+                                        Турнир
+                                    </div>
+                                </div>
+                                <h3 class="event-title">Турнир по стритболу среди школ Белгорода</h3>
+                                <p class="event-description">
+                                    Ежегодный турнир по уличному баскетболу. Команды из 3 человек. 
+                                    Призы победителям и памятные призы всем участникам.
+                                </p>
+                                <div class="event-tags">
+                                    <span class="event-tag">Баскетбол</span>
+                                    <span class="event-tag">Школьный спорт</span>
+                                    <span class="event-tag">Командный</span>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="event-btn primary" onclick="window.location.href='event-details.html'">
+                                        <span class="material-symbols-outlined">how_to_reg</span>
+                                        Подать заявку
+                                    </button>
+                                    <button class="event-btn secondary">
+                                        <span class="material-symbols-outlined">info</span>
+                                        Подробнее
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="event-card-large">
+                            <div class="event-image">
+                                <img src="https://images.unsplash.com/photo-1552674605-469455965637?q=80&w=1000&auto=format&fit=crop" alt="Забег">
+                                <div class="event-badge badge-offline">Офлайн</div>
+                            </div>
+                            <div class="event-content">
+                                <div class="event-meta">
+                                    <div class="event-date">
+                                        <span class="material-symbols-outlined">calendar_month</span>
+                                        19 мая 2025
+                                    </div>
+                                    <div class="event-format" style="background: rgba(255, 152, 0, 0.1); color: var(--dir-sport);">
+                                        Забег
+                                    </div>
+                                </div>
+                                <h3 class="event-title">Забег.РФ — всероссийский полумарафон</h3>
+                                <p class="event-description">
+                                    Полумарафон на 21.1 км с синхронным стартом в 50 городах России. 
+                                    Дистанции также доступны для любителей: 5 и 10 км.
+                                </p>
+                                <div class="event-tags">
+                                    <span class="event-tag">Бег</span>
+                                    <span class="event-tag">Полумарафон</span>
+                                    <span class="event-tag">Массовый</span>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="event-btn primary" onclick="window.location.href='event-details.html'">
+                                        <span class="material-symbols-outlined">how_to_reg</span>
+                                        Участвовать
+                                    </button>
+                                    <button class="event-btn secondary">
+                                        <span class="material-symbols-outlined">info</span>
+                                        Подробнее
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Контент направления: Вдохновляйся -->
+            <div class="direction-content" id="vdohnovlyajsya">
+                <div class="direction-header">
+                    <div class="direction-icon-title">
+                        <span class="material-symbols-outlined" style="color: var(--dir-vdohnovlyajsya);">auto_awesome</span>
+                        <h1 class="direction-title">Вдохновляйся</h1>
+                    </div>
+                    <p class="direction-description">
+                        Открой для себя мир искусства, творчества и культуры. 
+                        Участвуй в фестивалях, выставках и встречах с известными деятелями культуры. 
+                        Найди вдохновение в творчестве других и раскрой свой собственный творческий потенциал.
+                    </p>
+                </div>
+
+                <div class="events-section">
+                    <div class="events-header">
+                        <h2 class="events-title">Мероприятия направления</h2>
+                        <div class="events-filters">
+                            <button class="events-filter active">Все</button>
+                            <button class="events-filter">Фестивали</button>
+                            <button class="events-filter">Выставки</button>
+                            <button class="events-filter">Встречи</button>
+                        </div>
+                    </div>
+
+                    <div class="events-grid">
+                        <div class="event-card-large">
+                            <div class="event-image">
+                                <img src="https://images.unsplash.com/photo-1459749411177-d4a414c9ff86?q=80&w=1000&auto=format&fit=crop" alt="Фестиваль">
+                                <div class="event-badge badge-hybrid">Гибрид</div>
+                            </div>
+                            <div class="event-content">
+                                <div class="event-meta">
+                                    <div class="event-date">
+                                        <span class="material-symbols-outlined">calendar_month</span>
+                                        12-16 августа 2025
+                                    </div>
+                                    <div class="event-format" style="background: rgba(156, 39, 176, 0.1); color: var(--dir-vdohnovlyajsya);">
+                                        Фестиваль
+                                    </div>
+                                </div>
+                                <h3 class="event-title">Таврида.АРТ: Фестиваль молодого искусства</h3>
+                                <p class="event-description">
+                                    Крупнейший фестиваль молодого искусства и креативных индустрий. 
+                                    Музыка, театр, кино, изобразительное искусство, медиа и дизайн.
+                                </p>
+                                <div class="event-tags">
+                                    <span class="event-tag">Искусство</span>
+                                    <span class="event-tag">Креативные индустрии</span>
+                                    <span class="event-tag">Фестиваль</span>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="event-btn primary" onclick="window.location.href='event-details.html'">
+                                        <span class="material-symbols-outlined">how_to_reg</span>
+                                        Подать заявку
+                                    </button>
+                                    <button class="event-btn secondary">
+                                        <span class="material-symbols-outlined">info</span>
+                                        Подробнее
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="event-card-large">
+                            <div class="event-image">
+                                <img src="https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?q=80&w=1000&auto=format&fit=crop" alt="Выставка">
+                                <div class="event-badge badge-offline">Офлайн</div>
+                            </div>
+                            <div class="event-content">
+                                <div class="event-meta">
+                                    <div class="event-date">
+                                        <span class="material-symbols-outlined">calendar_month</span>
+                                        25 мая - 10 июня 2025
+                                    </div>
+                                    <div class="event-format" style="background: rgba(156, 39, 176, 0.1); color: var(--dir-vdohnovlyajsya);">
+                                        Выставка
+                                    </div>
+                                </div>
+                                <h3 class="event-title">Выставка молодых художников Белогорья</h3>
+                                <p class="event-description">
+                                    Ежегодная выставка работ молодых художников Белгородской области. 
+                                    Живопись, графика, скульптура, цифровое искусство.
+                                </p>
+                                <div class="event-tags">
+                                    <span class="event-tag">Живопись</span>
+                                    <span class="event-tag">Выставка</span>
+                                    <span class="event-tag">Искусство</span>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="event-btn primary" onclick="window.location.href='event-details.html'">
+                                        <span class="material-symbols-outlined">how_to_reg</span>
+                                        Участвовать
+                                    </button>
+                                    <button class="event-btn secondary">
+                                        <span class="material-symbols-outlined">info</span>
+                                        Подробнее
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="event-card-large">
+                            <div class="event-image">
+                                <img src="https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?q=80&w=1000&auto=format&fit=crop" alt="Встреча">
+                                <div class="event-badge badge-offline">Офлайн</div>
+                            </div>
+                            <div class="event-content">
+                                <div class="event-meta">
+                                    <div class="event-date">
+                                        <span class="material-symbols-outlined">calendar_month</span>
+                                        8 июня 2025, 19:00
+                                    </div>
+                                    <div class="event-format" style="background: rgba(156, 39, 176, 0.1); color: var(--dir-vdohnovlyajsya);">
+                                        Встреча
+                                    </div>
+                                </div>
+                                <h3 class="event-title">Встреча с режиссером Анной Сидоровой</h3>
+                                <p class="event-description">
+                                    Творческая встреча с известным режиссером, обсуждение процесса создания кино, 
+                                    ответы на вопросы и просмотр короткометражного фильма.
+                                </p>
+                                <div class="event-tags">
+                                    <span class="event-tag">Кино</span>
+                                    <span class="event-tag">Режиссура</span>
+                                    <span class="event-tag">Встреча</span>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="event-btn primary" onclick="window.location.href='event-details.html'">
+                                        <span class="material-symbols-outlined">how_to_reg</span>
+                                        Записаться
+                                    </button>
+                                    <button class="event-btn secondary">
+                                        <span class="material-symbols-outlined">info</span>
+                                        Подробнее
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Контент направления: Развивайся -->
+            <div class="direction-content" id="razvivajsya">
+                <div class="direction-header">
+                    <div class="direction-icon-title">
+                        <span class="material-symbols-outlined" style="color: var(--dir-razvivajsya);">lightbulb</span>
+                        <h1 class="direction-title">Развивайся</h1>
+                    </div>
+                    <p class="direction-description">
+                        Посещай образовательные программы, тренинги и воркшопы. 
+                        Совершенствуй soft skills и получай новые знания для личностного роста. 
+                        Развивай критическое мышление, коммуникативные навыки и лидерские качества.
+                    </p>
+                    <div class="direction-stats">
+                        <div class="direction-stat">
+                            <div class="stat-value" style="color: var(--dir-razvivajsya);">56</div>
+                            <div class="stat-label">Организаций</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="events-section">
+                    <div class="events-header">
+                        <h2 class="events-title">Мероприятия направления</h2>
+                        <div class="events-filters">
+                            <button class="events-filter active">Все</button>
+                            <button class="events-filter">Тренинги</button>
+                            <button class="events-filter">Курсы</button>
+                            <button class="events-filter">Воркшопы</button>
+                        </div>
+                    </div>
+
+                    <div class="events-grid">
+                        <div class="event-card-large">
+                            <div class="event-image">
+                                <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=1000&auto=format&fit=crop" alt="Тренинг">
+                                <div class="event-badge badge-offline">Офлайн</div>
+                            </div>
+                            <div class="event-content">
+                                <div class="event-meta">
+                                    <div class="event-date">
+                                        <span class="material-symbols-outlined">calendar_month</span>
+                                        Завтра, 18:00
+                                    </div>
+                                    <div class="event-format" style="background: rgba(0, 150, 136, 0.1); color: var(--dir-razvivajsya);">
+                                        Тренинг
+                                    </div>
+                                </div>
+                                <h3 class="event-title">Мастер-класс: Нейросети для создания контента</h3>
+                                <p class="event-description">
+                                    Практическое занятие по использованию AI-инструментов для генерации текста, 
+                                    изображений и видео. От экспертов Сбера.
+                                </p>
+                                <div class="event-tags">
+                                    <span class="event-tag">AI</span>
+                                    <span class="event-tag">Нейросети</span>
+                                    <span class="event-tag">Контент</span>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="event-btn primary" onclick="window.location.href='event-details.html'">
+                                        <span class="material-symbols-outlined">how_to_reg</span>
+                                        Записаться
+                                    </button>
+                                    <button class="event-btn secondary">
+                                        <span class="material-symbols-outlined">info</span>
+                                        Подробнее
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="event-card-large">
+                            <div class="event-image">
+                                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1000&auto=format&fit=crop" alt="Курс">
+                                <div class="event-badge badge-hybrid">Гибрид</div>
+                            </div>
+                            <div class="event-content">
+                                <div class="event-meta">
+                                    <div class="event-date">
+                                        <span class="material-symbols-outlined">calendar_month</span>
+                                        15 мая - 15 июля 2025
+                                    </div>
+                                    <div class="event-format" style="background: rgba(0, 150, 136, 0.1); color: var(--dir-razvivajsya);">
+                                        Курс
+                                    </div>
+                                </div>
+                                <h3 class="event-title">Курс "Основы проектного менеджмента"</h3>
+                                <p class="event-description">
+                                    2-месячный курс по управлению проектами. Agile, Scrum, Kanban, 
+                                    планирование, управление командой и ресурсами.
+                                </p>
+                                <div class="event-tags">
+                                    <span class="event-tag">Проектный менеджмент</span>
+                                    <span class="event-tag">Управление</span>
+                                    <span class="event-tag">Курс</span>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="event-btn primary" onclick="window.location.href='event-details.html'">
+                                        <span class="material-symbols-outlined">how_to_reg</span>
+                                        Записаться
+                                    </button>
+                                    <button class="event-btn secondary">
+                                        <span class="material-symbols-outlined">info</span>
+                                        Подробнее
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="event-card-large">
+                            <div class="event-image">
+                                <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?q=80&w=1000&auto=format&fit=crop" alt="Тренинг">
+                                <div class="event-badge badge-online">Онлайн</div>
+                            </div>
+                            <div class="event-content">
+                                <div class="event-meta">
+                                    <div class="event-date">
+                                        <span class="material-symbols-outlined">calendar_month</span>
+                                        30 апреля 2025, 16:00
+                                    </div>
+                                    <div class="event-format" style="background: rgba(0, 150, 136, 0.1); color: var(--dir-razvivajsya);">
+                                        Тренинг
+                                    </div>
+                                </div>
+                                <h3 class="event-title">Тренинг "Эффективные коммуникации"</h3>
+                                <p class="event-description">
+                                    Развитие навыков публичных выступлений, ведения переговоров и работы в команде. 
+                                    Практические упражнения и обратная связь от тренера.
+                                </p>
+                                <div class="event-tags">
+                                    <span class="event-tag">Коммуникации</span>
+                                    <span class="event-tag">Публичные выступления</span>
+                                    <span class="event-tag">Soft skills</span>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="event-btn primary" onclick="window.location.href='event-details.html'">
+                                        <span class="material-symbols-outlined">how_to_reg</span>
+                                        Записаться
+                                    </button>
+                                    <button class="event-btn secondary">
+                                        <span class="material-symbols-outlined">info</span>
+                                        Подробнее
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Контент направления: Будь признан -->
+            <div class="direction-content" id="bud-priznan">
+                <div class="direction-header">
+                    <div class="direction-icon-title">
+                        <span class="material-symbols-outlined" style="color: var(--dir-bud-priznan);">stars</span>
+                        <h1 class="direction-title">Будь признан</h1>
+                    </div>
+                    <p class="direction-description">
+                        Получай заслуженное признание за свои достижения. 
+                        Участвуй в премиях, рейтингах и программах поддержки талантливой молодежи. 
+                        Стань частью сообщества лидеров и получи возможность для дальнейшего роста и развития.
+                    </p>
+                    <div class="direction-stats">
+                        <div class="direction-stat">
+                            <div class="stat-value" style="color: var(--dir-bud-priznan);">18</div>
+                            <div class="stat-label">Премии</div>
+                        </div>
+                        <div class="direction-stat">
+                            <div class="stat-value" style="color: var(--dir-bud-priznan);">312</div>
+                            <div class="stat-label">Победителей</div>
+                        </div>
+                        <div class="direction-stat">
+                            <div class="stat-value" style="color: var(--dir-bud-priznan);">5М+</div>
+                            <div class="stat-label">Рублей призовых</div>
+                        </div>
+                        <div class="direction-stat">
+                            <div class="stat-value" style="color: var(--dir-bud-priznan);">87%</div>
+                            <div class="stat-label">Карьерный рост</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="events-section">
+                    <div class="events-header">
+                        <h2 class="events-title">Мероприятия направления</h2>
+                        <div class="events-filters">
+                            <button class="events-filter active">Все</button>
+                            <button class="events-filter">Премии</button>
+                            <button class="events-filter">Рейтинги</button>
+                            <button class="events-filter">Конкурсы</button>
+                        </div>
+                    </div>
+
+                    <div class="events-grid">
+                        <div class="event-card-large">
+                            <div class="event-image">
+                                <img src="https://images.unsplash.com/photo-1561489401-fc2876ced162?q=80&w=1000&auto=format&fit=crop" alt="Премия">
+                                <div class="event-badge badge-offline">Офлайн</div>
+                            </div>
+                            <div class="event-content">
+                                <div class="event-meta">
+                                    <div class="event-date">
+                                        <span class="material-symbols-outlined">calendar_month</span>
+                                        25 ноября 2025
+                                    </div>
+                                    <div class="event-format" style="background: rgba(244, 67, 54, 0.1); color: var(--dir-bud-priznan);">
+                                        Премия
+                                    </div>
+                                </div>
+                                <h3 class="event-title">Студент года 2026: региональный этап</h3>
+                                <p class="event-description">
+                                    Национальная премия для студентов за достижения в учебе, науке, 
+                                    творчестве, спорте и общественной деятельности.
+                                </p>
+                                <div class="event-tags">
+                                    <span class="event-tag">Премия</span>
+                                    <span class="event-tag">Студенты</span>
+                                    <span class="event-tag">Достижения</span>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="event-btn primary" onclick="window.location.href='event-details.html'">
+                                        <span class="material-symbols-outlined">how_to_reg</span>
+                                        Подать заявку
+                                    </button>
+                                    <button class="event-btn secondary">
+                                        <span class="material-symbols-outlined">info</span>
+                                        Подробнее
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="event-card-large">
+                            <div class="event-image">
+                                <img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=1000&auto=format&fit=crop" alt="Рейтинг">
+                                <div class="event-badge badge-online">Онлайн</div>
+                            </div>
+                            <div class="event-content">
+                                <div class="event-meta">
+                                    <div class="event-date">
+                                        <span class="material-symbols-outlined">calendar_month</span>
+                                        до 15 сентября 2025
+                                    </div>
+                                    <div class="event-format" style="background: rgba(244, 67, 54, 0.1); color: var(--dir-bud-priznan);">
+                                        Рейтинг
+                                    </div>
+                                </div>
+                                <h3 class="event-title">Премия "Молодой деятель культуры"</h3>
+                                <p class="event-description">
+                                    Всероссийский рейтинг молодых деятелей культуры и искусства. 
+                                    Победители получают гранты на реализацию творческих проектов.
+                                </p>
+                                <div class="event-tags">
+                                    <span class="event-tag">Культура</span>
+                                    <span class="event-tag">Искусство</span>
+                                    <span class="event-tag">Рейтинг</span>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="event-btn primary" onclick="window.location.href='event-details.html'">
+                                        <span class="material-symbols-outlined">how_to_reg</span>
+                                        Подать заявку
+                                    </button>
+                                    <button class="event-btn secondary">
+                                        <span class="material-symbols-outlined">info</span>
+                                        Подробнее
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="event-card-large">
+                            <div class="event-image">
+                                <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=1000&auto=format&fit=crop" alt="Церемония">
+                                <div class="event-badge badge-offline">Офлайн</div>
+                            </div>
+                            <div class="event-content">
+                                <div class="event-meta">
+                                    <div class="event-date">
+                                        <span class="material-symbols-outlined">calendar_month</span>
+                                        20 октября 2025
+                                    </div>
+                                    <div class="event-format" style="background: rgba(244, 67, 54, 0.1); color: var(--dir-bud-priznan);">
+                                        Церемония
+                                    </div>
+                                </div>
+                                <h3 class="event-title">Церемония награждения "Лидеры Белогорья"</h3>
+                                <p class="event-description">
+                                    Ежегодная церемония награждения самых активных и талантливых молодых людей региона. 
+                                    15 номинаций, призы и подарки от партнеров.
+                                </p>
+                                <div class="event-tags">
+                                    <span class="event-tag">Лидеры</span>
+                                    <span class="event-tag">Награждение</span>
+                                    <span class="event-tag">Региональный</span>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="event-btn primary" onclick="window.location.href='event-details.html'">
+                                        <span class="material-symbols-outlined">how_to_reg</span>
+                                        Номинировать
+                                    </button>
+                                    <button class="event-btn secondary">
+                                        <span class="material-symbols-outlined">info</span>
+                                        Подробнее
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Переключение направлений через боковое меню
+        document.addEventListener('DOMContentLoaded', function() {
+            const directionLinks = document.querySelectorAll('.sidebar-link[data-direction]');
+            const directionContents = document.querySelectorAll('.direction-content');
+            
+            directionLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Убираем активный класс у всех ссылок
+                    directionLinks.forEach(item => item.classList.remove('active'));
+                    // Добавляем активный класс текущей ссылке
+                    this.classList.add('active');
+                    
+                    // Получаем ID целевого контента
+                    const targetDirection = this.getAttribute('data-direction');
+                    
+                    // Скрываем все контенты
+                    directionContents.forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Показываем целевой контент
+                    document.getElementById(targetDirection).classList.add('active');
+                    
+                    // Прокручиваем к верху страницы
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+            
+            // Обработка фильтров мероприятий
+            const eventFilters = document.querySelectorAll('.events-filter');
+            eventFilters.forEach(filter => {
+                filter.addEventListener('click', function() {
+                    eventFilters.forEach(f => f.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // В реальном приложении здесь была бы фильтрация мероприятий
+                    console.log('Фильтр применен:', this.textContent);
+                });
+            });
+            
+            // Обработка кнопок мероприятий
+            const eventButtons = document.querySelectorAll('.event-btn.primary');
+            eventButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    // Если кнопка уже ведет на страницу мероприятия, не делаем ничего
+                    if (this.getAttribute('onclick')) return;
+                    
+                    const eventTitle = this.closest('.event-card-large').querySelector('.event-title').textContent;
+                    alert(`Вы выбрали мероприятие: "${eventTitle}". В реальном приложении здесь была бы регистрация.`);
+                });
+            });
+            
+            // Инициализация первого направления как активного
+            if (directionLinks.length > 0 && !document.querySelector('.sidebar-link.active')) {
+                directionLinks[0].click();
+            }
+        });
+    </script>
+</body>
+</html>

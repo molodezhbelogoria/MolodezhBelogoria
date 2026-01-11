@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Молодежь Белогорья</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* --- 1. GLOBAL RESET & BASE STYLES --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Roboto', sans-serif; background-color: #f9f9f9; color: #0f0f0f; }
+        a { text-decoration: none; color: inherit; }
+
+        /* --- 3. LAYOUT CONTAINER --- */
+        .container { display: flex; min-height: calc(100vh - 65px); }
+        
+        /* Main Content */
+        main { flex: 1; padding: 24px; overflow-x: hidden; }
+
+        /* Tabs Logic */
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- 4. COMMON UI ELEMENTS (Chips, Headers) --- */
+        .navigator-header { margin-bottom: 24px; }
+        .navigator-header h1 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+        .controls { display: flex; justify-content: space-between; align-items: center; }
+        .chips-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+        .chip { padding: 8px 16px; background-color: #fff; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 14px; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .chip:hover { background-color: #f5f5f5; }
+        .chip.active { background-color: #0f0f0f; color: white; border-color: #0f0f0f; }
+
+        /* --- 5. VERTICAL CARD STYLES (Culture, Sport, Self-realization) --- */
+        .event-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+        .event-card { background: #fff; border-radius: 16px; overflow: hidden; border: 1px solid #f0f0f0; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; display: flex; flex-direction: column; }
+        .event-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
+        .event-thumb { height: 180px; position: relative; overflow: hidden; }
+        .event-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .card-badge { position: absolute; top: 12px; left: 12px; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; color: white; backdrop-filter: blur(4px); }
+        .badge-offline { background: rgba(234, 67, 53, 0.9); }
+        .badge-online { background: rgba(52, 168, 83, 0.9); }
+        .badge-hybrid { background: rgba(251, 188, 5, 0.9); color: black; }
+        
+        .event-details { padding: 16px; flex: 1; display: flex; flex-direction: column; }
+        .event-tags { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+        .tag-pill { font-size: 11px; padding: 4px 8px; border-radius: 4px; background: #f1f3f4; color: #5f6368; font-weight: 500; }
+        .tag-highlight { background: #e3f2fd; color: #1976d2; }
+        
+        .event-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; line-height: 1.4; color: #202124; }
+        .event-meta { margin-top: auto; display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: #5f6368; border-top: 1px solid #f0f0f0; padding-top: 12px; }
+        .meta-row { display: flex; align-items: center; gap: 6px; }
+        .pushkin-row { color: #9c27b0; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+
+        /* --- 6. DPO/UNIVERSAL FILTER LAYOUT --- */
+        .filter-layout { display: grid; grid-template-columns: 280px 1fr; gap: 24px; align-items: start; }
+        
+        /* Banner for each section */
+        .section-banner { border-radius: 16px; padding: 24px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden; min-height: 140px; }
+        .culture-banner { background: linear-gradient(100deg, #f3e5f5 0%, #e1bee7 100%); }
+        .sport-banner { background: linear-gradient(100deg, #e8f5e9 0%, #c8e6c9 100%); }
+        .selfreal-banner { background: linear-gradient(100deg, #fff3e0 0%, #ffe0b2 100%); }
+        .dpo-banner { background: linear-gradient(100deg, #e3f2fd 0%, #bbdefb 100%); }
+        
+        .banner-content { z-index: 2; max-width: 65%; }
+        .banner-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+        .culture-title { color: #6a1b9a; }
+        .sport-title { color: #2e7d32; }
+        .selfreal-title { color: #ef6c00; }
+        .dpo-title { color: #0d47a1; }
+        
+        .banner-btn { background: white; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; border: none; }
+        .culture-btn { color: #6a1b9a; }
+        .sport-btn { color: #2e7d32; }
+        .selfreal-btn { color: #ef6c00; }
+        .dpo-btn { color: #005bff; }
+        
+        .banner-img { height: 120px; z-index: 1; opacity: 0.9; }
+
+        /* Sort Bar */
+        .sort-bar { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 12px 20px; border-radius: 12px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .sort-select { border: none; background: #f5f5f5; padding: 6px 12px; border-radius: 8px; font-size: 14px; cursor: pointer; outline: none; margin-left: 8px; }
+
+        /* Filters Sidebar */
+        .filters-sidebar { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .filter-group { margin-bottom: 20px; border-bottom: 1px solid #f0f0f0; padding-bottom: 16px; }
+        .filter-group:last-child { border-bottom: none; }
+        .filter-title { font-size: 15px; font-weight: 600; margin-bottom: 12px; display: flex; justify-content: space-between; cursor: pointer; }
+        
+        .toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #005bff; }
+        input:checked + .slider:before { transform: translateX(18px); }
+        
+        .checkbox-row { display: flex; align-items: center; margin-bottom: 10px; cursor: pointer; font-size: 14px; color: #444; }
+        .checkbox-row input { margin-right: 10px; accent-color: #005bff; width: 16px; height: 16px; }
+
+        /* Horizontal Card Styles (for all sections) */
+        .horizontal-card { display: flex; background: #fff; border-radius: 16px; padding: 20px; border: 1px solid #f0f0f0; transition: box-shadow 0.2s; margin-bottom: 16px; }
+        .horizontal-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); border-color: transparent; }
+        .card-img-wrap { width: 160px; height: 160px; flex-shrink: 0; margin-right: 24px; border-radius: 8px; overflow: hidden; background: #f9f9f9; display: flex; align-items: center; justify-content: center; }
+        .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+        .card-content { flex: 1; display: flex; flex-direction: column; padding-right: 24px; }
+        
+        .card-badge-small { display: inline-block; font-size: 12px; font-weight: 500; padding: 4px 8px; border-radius: 4px; width: fit-content; margin-bottom: 8px; }
+        .culture-badge { background: #f3e5f5; color: #6a1b9a; }
+        .sport-badge { background: #e8f5e9; color: #2e7d32; }
+        .selfreal-badge { background: #fff3e0; color: #ef6c00; }
+        .dpo-badge { background: #e6f4ea; color: #1e8e3e; }
+        
+        .card-title { font-size: 18px; font-weight: 600; margin-bottom: 4px; color: #202124; }
+        .card-subtitle { font-size: 13px; color: #808080; margin-bottom: 12px; }
+        .card-specs { list-style: none; font-size: 13px; color: #555; }
+        .card-specs li { margin-bottom: 6px; display: flex; }
+        .card-specs li span:first-child { color: #888; width: 100px; flex-shrink: 0; }
+        
+        .card-actions { width: 190px; flex-shrink: 0; border-left: 1px solid #f0f0f0; padding-left: 24px; display: flex; flex-direction: column; }
+        .price-tag { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+        .bonus-tag { background: #fff0d6; color: #d97706; font-size: 11px; padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px; width: fit-content; margin-bottom: 12px; }
+        .rating-block { display: flex; align-items: center; gap: 4px; margin-bottom: 20px; font-size: 13px; }
+        .star { color: #fbbc04; font-size: 16px; }
+        .btn-full { background: #005bff; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: 500; cursor: pointer; width: 100%; display: flex; justify-content: center; gap: 8px; transition: 0.2s; }
+        .btn-full:hover { background: #004ecc; }
+        .btn-outline { background: #fff; color: #005bff; border: 1px solid #005bff; padding: 10px; border-radius: 8px; font-weight: 500; cursor: pointer; width: 100%; display: flex; justify-content: center; gap: 8px; transition: 0.2s; }
+        .btn-outline:hover { background: #f5f5f5; }
+
+        /* Новый стиль для отображения даты/времени в правой колонке */
+        .date-block { margin-bottom: 12px; }
+        .date-label { font-size: 12px; color: #666; margin-bottom: 4px; }
+        .date-value { font-size: 14px; font-weight: 600; color: #333; }
+
+        @media (max-width: 1100px) {
+            .filter-layout { grid-template-columns: 240px 1fr; }
+            .card-img-wrap { width: 120px; height: 120px; }
+        }
+        @media (max-width: 900px) {
+            .filter-layout { grid-template-columns: 1fr; }
+            .filters-col { display: none; } /* Скрываем фильтры на мобильных для демо */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <span class="material-symbols-outlined menu-icon">menu</span>
+            <div class="logo-container" onclick="window.location.href='index.html'">
+                <div class="logo-text">
+                    <img src="logo.svg" alt="Логотип Молодежь Белогорья" class="logo-img">
+                </div>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="search-box">
+                <div class="search-input-wrapper">
+                    <input type="text" placeholder="Поиск мероприятий, секций, курсов...">
+                </div>
+                <button class="search-btn"><span class="material-symbols-outlined">search</span></button>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <span class="material-symbols-outlined" style="cursor: pointer; color: #606060;">notifications</span>
+            <div class="avatar">A</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside>
+            <div class="sidebar-section">
+                <a href="#" class="sidebar-link"><span class="material-symbols-outlined">home</span> Главная</a>
+                <a href="#" class="sidebar-link"><span class="material-symbols-outlined">emoji_events</span> Истории успеха</a>
+                <a href="#" class="sidebar-link"><span class="material-symbols-outlined">military_tech</span> Лидерборд</a>
+            </div>
+
+            <div class="sidebar-section">
+              <div class="section-title">Направления</div>
+                <a href="direction.html"  class="sidebar-link dir-praktikuisya" data-direction="praktikuisya">
+                    <span class="material-symbols-outlined">model_training</span>
+                    Практикуйся
+                </a>
+                <a href="direction.html"  class="sidebar-link dir-pobezhdaj" data-direction="pobezhdaj">
+                    <span class="material-symbols-outlined">workspace_premium</span>
+                    Побеждай
+                </a>
+                <a href="direction.html"  class="sidebar-link dir-sport" data-direction="sport">
+                    <span class="material-symbols-outlined">sports_basketball</span>
+                    Спорт
+                </a>
+                <a href="direction.html"  class="sidebar-link dir-vdohnovlyajsya" data-direction="vdohnovlyajsya">
+                    <span class="material-symbols-outlined">auto_awesome</span>
+                    Вдохновляйся
+                </a>
+                <a href="direction.html"  class="sidebar-link dir-razvivajsya" data-direction="razvivajsya">
+                    <span class="material-symbols-outlined">lightbulb</span>
+                    Развивайся
+                </a>
+                <a href="direction.html" class="sidebar-link dir-bud-priznan" data-direction="bud-priznan">
+                    <span class="material-symbols-outlined">stars</span>
+                    Будь признан
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <a href="profile.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">account_circle</span>
+                    Профиль
+                </a>
+                <a href="applications.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">description</span>
+                    Заявки
+                </a>
+                <a href="projects.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">account_tree</span>
+                    Мои проекты
+                </a>
+                <a href="points-exchange.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">redeem</span>
+                    Обмен баллов
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <div class="section-title">Навигатор</div>
+                <a href="#" class="sidebar-link active" data-tab="culture">
+                    <span class="material-symbols-outlined">theater_comedy</span> Культура
+                </a>
+                <a href="#" class="sidebar-link" data-tab="sport">
+                    <span class="material-symbols-outlined">fitness_center</span> Спорт
+                </a>
+                <a href="#" class="sidebar-link" data-tab="dpo">
+                    <span class="material-symbols-outlined">school</span> ДПО (Образование)
+                </a>
+                <a href="#" class="sidebar-link" data-tab="self-realization">
+                    <span class="material-symbols-outlined">explore</span> Самореализация
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">Другие возможности</div>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined" style="color: #00ff11;">smart_toy</span>
+                    Ai куратор
+                </a>
+                <a href="searching.html" class="sidebar-link">
+                    <span class="material-symbols-outlined" style="color: #0055ff;">group_add</span>
+                    Найти команду в проект
+                </a>
+                    <a href="searchnastavnik.html" class="sidebar-link">
+                    <span class="material-symbols-outlined" style="color: #ff00aa;">group_add</span>
+                    Найти наставника
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">settings</span>
+                    Настройки
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">help_outline</span>
+                    Справка
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">mail</span>
+                    Связаться с нами
+                </a>
+            </div>
+
+            <div class="sidebar-section no-border">
+                <div class="footer-links">
+                    <a href="#">О проекте</a>
+                    <a href="#">Направления</a>
+                    <a href="#">Связаться с нами</a>
+                    <a href="#">Организация</a>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Условия</a>
+                    <a href="#">Конфиденциальность</a>
+                </div>
+                <div class="copyright">
+                    © 2026 MolodezhBelogoria
+                </div>
+            </div>
+        </aside>
+
+        <main>
+            
+            <div class="tab-content active" id="culture">
+                <div class="filter-layout">
+                    <div class="filters-col">
+                        <div class="filters-sidebar">
+                            <div class="filter-group">
+                                <div class="toggle-row">
+                                    <span style="font-size:14px; font-weight:500;">Только бесплатные</span>
+                                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                                </div>
+                                <div class="toggle-row">
+                                    <span style="font-size:14px; font-weight:500;">Пушкинская карта</span>
+                                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                                </div>
+                            </div>
+
+                            <div class="filter-group">
+                                <div class="filter-title">Тип мероприятия <span class="material-symbols-outlined">expand_less</span></div>
+                                <div class="checkbox-row"><input type="checkbox" checked>Театр</div>
+                                <div class="checkbox-row"><input type="checkbox">Выставки</div>
+                                <div class="checkbox-row"><input type="checkbox">Концерты</div>
+                                <div class="checkbox-row"><input type="checkbox">Мастер-классы</div>
+                                <div class="checkbox-row"><input type="checkbox">Лекции</div>
+                            </div>
+
+                            <div class="filter-group">
+                                <div class="filter-title">Дата <span class="material-symbols-outlined">expand_less</span></div>
+                                <div class="checkbox-row"><input type="checkbox">Сегодня</div>
+                                <div class="checkbox-row"><input type="checkbox">Завтра</div>
+                                <div class="checkbox-row"><input type="checkbox">Эта неделя</div>
+                                <div class="checkbox-row"><input type="checkbox">Выходные</div>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <div class="filter-title">Место проведения <span class="material-symbols-outlined">expand_less</span></div>
+                                <div class="checkbox-row"><input type="checkbox">Центр города</div>
+                                <div class="checkbox-row"><input type="checkbox">Радищева</div>
+                                <div class="checkbox-row"><input type="checkbox">Студенческая</div>
+                                <div class="checkbox-row"><input type="checkbox">Восточный округ</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-col">
+                        <div class="section-banner culture-banner">
+                            <div class="banner-content">
+                                <div class="banner-title culture-title">Культурная афиша Белгорода</div>
+                                <div style="color: #444; font-size: 14px; line-height: 1.5;">Более 200 мероприятий в месяц.<br>От театральных премьер до уличных фестивалей.</div>
+                                <button class="banner-btn culture-btn">
+                                    <span class="material-symbols-outlined" style="font-size:18px;">calendar_month</span> Календарь событий
+                                </button>
+                            </div>
+                            <span class="material-symbols-outlined" style="font-size: 120px; color: #fff; opacity: 0.5; position:absolute; right: -20px;">theater_comedy</span>
+                        </div>
+
+                        <div class="sort-bar">
+                            <div style="display:flex; align-items:center;">
+                                <span style="font-size:14px; color:#666;">Сортировать по:</span>
+                                <select class="sort-select">
+                                    <option>Дате</option>
+                                    <option>Популярности</option>
+                                    <option>Рейтингу</option>
+                                    <option>Цене</option>
+                                </select>
+                            </div>
+                            <div style="color:#ccc;">
+                                <span class="material-symbols-outlined" style="cursor:pointer; color:#005bff;">view_list</span>
+                                <span class="material-symbols-outlined" style="cursor:pointer; margin-left:8px;">grid_view</span>
+                            </div>
+                        </div>
+
+                        <div class="cards-list">
+                            <!-- Карточка 1 -->
+                            <div class="horizontal-card">
+                                <div class="card-img-wrap">
+                                    <img src="https://images.unsplash.com/photo-1503095392237-fc785880cba4?auto=format&fit=crop&q=80&w=600" alt="Theatre">
+                                </div>
+                                <div class="card-content">
+                                    <div>
+                                        <span class="card-badge-small culture-badge">Театр</span>
+                                        <h3 class="card-title">Спектакль "Капитанская дочка" в БГАДТ им. Щепкина</h3>
+                                        <div class="card-subtitle">Белгородский государственный академический драматический театр</div>
+                                        <ul class="card-specs">
+                                            <li><span>Жанр:</span> <span>Драма, классика</span></li>
+                                            <li><span>Возраст:</span> <span>12+</span></li>
+                                            <li><span>Продолжительность:</span> <span>2 ч 30 мин</span></li>
+                                            <li><span>Адрес:</span> <span>Соборная площадь, 1</span></li>
+                                        </ul>
+                                    </div>
+                                    <a href="#" style="font-size:13px; color:#6a1b9a; margin-top:8px; display:inline-block;">Подробнее о мероприятии ></a>
+                                </div>
+                                <div class="card-actions">
+                                    <div class="date-block">
+                                        <div class="date-label">Дата и время</div>
+                                        <div class="date-value">24 мая, 18:00</div>
+                                    </div>
+                                    <div class="bonus-tag">
+                                        <span class="material-symbols-outlined" style="font-size:12px;">account_balance_wallet</span> Пушкинская карта
+                                    </div>
+                                    <div class="price-tag">от 500 ₽</div>
+                                    <button class="btn-full"><span class="material-symbols-outlined" style="font-size:18px;">confirmation_number</span> Купить билет</button>
+                                </div>
+                            </div>
+
+                            <!-- Карточка 2 -->
+                            <div class="horizontal-card">
+                                <div class="card-img-wrap">
+                                    <img src="https://images.unsplash.com/photo-1545989253-02cc26577f88?auto=format&fit=crop&q=80&w=600" alt="Concert">
+                                </div>
+                                <div class="card-content">
+                                    <div>
+                                        <span class="card-badge-small culture-badge">Концерт</span>
+                                        <h3 class="card-title">Симфонический рок: Хиты Queen в Филармонии</h3>
+                                        <div class="card-subtitle">Белгородская государственная филармония</div>
+                                        <ul class="card-specs">
+                                            <li><span>Жанр:</span> <span>Симфо-рок, классика</span></li>
+                                            <li><span>Исполнители:</span> <span>Симфонический оркестр филармонии</span></li>
+                                            <li><span>Адрес:</span> <span>ул. Белгородского полка, 56А</span></li>
+                                        </ul>
+                                    </div>
+                                    <a href="#" style="font-size:13px; color:#6a1b9a; margin-top:8px; display:inline-block;">Подробнее о мероприятии ></a>
+                                </div>
+                                <div class="card-actions">
+                                    <div class="date-block">
+                                        <div class="date-label">Дата и время</div>
+                                        <div class="date-value">28 мая, 19:00</div>
+                                    </div>
+                                    <div class="bonus-tag">
+                                        <span class="material-symbols-outlined" style="font-size:12px;">account_balance_wallet</span> Пушкинская карта
+                                    </div>
+                                    <div class="price-tag">от 800 ₽</div>
+                                    <button class="btn-full"><span class="material-symbols-outlined" style="font-size:18px;">confirmation_number</span> Купить билет</button>
+                                </div>
+                            </div>
+
+                            <!-- Карточка 3 -->
+                            <div class="horizontal-card">
+                                <div class="card-img-wrap">
+                                    <img src="https://images.unsplash.com/photo-1563050257-2c137937740e?auto=format&fit=crop&q=80&w=600" alt="Art">
+                                </div>
+                                <div class="card-content">
+                                    <div>
+                                        <span class="card-badge-small culture-badge">Выставка</span>
+                                        <h3 class="card-title">Выставка современного искусства "Арт-Окно"</h3>
+                                        <div class="card-subtitle">Выставочный зал "Родина"</div>
+                                        <ul class="card-specs">
+                                            <li><span>Художники:</span> <span>10 современных авторов</span></li>
+                                            <li><span>Экспозиция:</span> <span>Живопись, инсталляции, видео-арт</span></li>
+                                            <li><span>Адрес:</span> <span>ул. Преображенская, 38</span></li>
+                                        </ul>
+                                    </div>
+                                    <a href="#" style="font-size:13px; color:#6a1b9a; margin-top:8px; display:inline-block;">Подробнее о мероприятии ></a>
+                                </div>
+                                <div class="card-actions">
+                                    <div class="date-block">
+                                        <div class="date-label">Дата проведения</div>
+                                        <div class="date-value">до 30 мая</div>
+                                    </div>
+                                    <div class="bonus-tag" style="background:#e8f5e9; color:#2e7d32;">
+                                        <span class="material-symbols-outlined" style="font-size:12px;">check</span> Бесплатно
+                                    </div>
+                                    <button class="btn-outline"><span class="material-symbols-outlined" style="font-size:18px;">bookmark</span> Записаться</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="sport">
+                <div class="filter-layout">
+                    <div class="filters-col">
+                        <div class="filters-sidebar">
+                            <div class="filter-group">
+                                <div class="toggle-row">
+                                    <span style="font-size:14px; font-weight:500;">Бесплатные секции</span>
+                                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                                </div>
+                                <div class="toggle-row">
+                                    <span style="font-size:14px; font-weight:500;">Идет набор</span>
+                                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                                </div>
+                            </div>
+
+                            <div class="filter-group">
+                                <div class="filter-title">Вид спорта <span class="material-symbols-outlined">expand_less</span></div>
+                                <div class="checkbox-row"><input type="checkbox" checked>Футбол</div>
+                                <div class="checkbox-row"><input type="checkbox">Баскетбол</div>
+                                <div class="checkbox-row"><input type="checkbox">Волейбол</div>
+                                <div class="checkbox-row"><input type="checkbox">Теннис</div>
+                                <div class="checkbox-row"><input type="checkbox">Плавание</div>
+                                <div class="checkbox-row"><input type="checkbox">Бег/Легкая атлетика</div>
+                                <div class="checkbox-row"><input type="checkbox">Йога/Фитнес</div>
+                            </div>
+
+                            <div class="filter-group">
+                                <div class="filter-title">Возраст <span class="material-symbols-outlined">expand_less</span></div>
+                                <div class="checkbox-row"><input type="checkbox">Дети (7-12 лет)</div>
+                                <div class="checkbox-row"><input type="checkbox" checked>Подростки (13-17)</div>
+                                <div class="checkbox-row"><input type="checkbox">Молодежь (18-25)</div>
+                                <div class="checkbox-row"><input type="checkbox">Взрослые (26+)</div>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <div class="filter-title">Уровень подготовки <span class="material-symbols-outlined">expand_less</span></div>
+                                <div class="checkbox-row"><input type="checkbox" checked>Начинающий</div>
+                                <div class="checkbox-row"><input type="checkbox">Продолжающий</div>
+                                <div class="checkbox-row"><input type="checkbox">Профессиональный</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-col">
+                        <div class="section-banner sport-banner">
+                            <div class="banner-content">
+                                <div class="banner-title sport-title">Спорт и активный отдых</div>
+                                <div style="color: #444; font-size: 14px; line-height: 1.5;">Секции, турниры, занятия с тренером.<br>Начните заниматься спортом уже сегодня!</div>
+                                <button class="banner-btn sport-btn">
+                                    <span class="material-symbols-outlined" style="font-size:18px;">fitness_center</span> Найти тренера
+                                </button>
+                            </div>
+                            <span class="material-symbols-outlined" style="font-size: 120px; color: #fff; opacity: 0.5; position:absolute; right: -20px;">sports_soccer</span>
+                        </div>
+
+                        <div class="sort-bar">
+                            <div style="display:flex; align-items:center;">
+                                <span style="font-size:14px; color:#666;">Сортировать по:</span>
+                                <select class="sort-select">
+                                    <option>Близости</option>
+                                    <option>Цене</option>
+                                    <option>Рейтингу</option>
+                                    <option>Дате начала</option>
+                                </select>
+                            </div>
+                            <div style="color:#ccc;">
+                                <span class="material-symbols-outlined" style="cursor:pointer; color:#005bff;">view_list</span>
+                                <span class="material-symbols-outlined" style="cursor:pointer; margin-left:8px;">grid_view</span>
+                            </div>
+                        </div>
+
+                        <div class="cards-list">
+                            <!-- Карточка 1 -->
+                            <div class="horizontal-card">
+                                <div class="card-img-wrap">
+                                    <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=80&w=600" alt="Running">
+                                </div>
+                                <div class="card-content">
+                                    <div>
+                                        <span class="card-badge-small sport-badge">Бег</span>
+                                        <h3 class="card-title">Благотворительный полумарафон "Пульс Белогорья"</h3>
+                                        <div class="card-subtitle">Организатор: Белгородская федерация легкой атлетики</div>
+                                        <ul class="card-specs">
+                                            <li><span>Дистанции:</span> <span>5 км, 10 км, 21 км</span></li>
+                                            <li><span>Участники:</span> <span>от 16 лет</span></li>
+                                            <li><span>Место старта:</span> <span>Парк Победы</span></li>
+                                            <li><span>Цель:</span> <span>Сбор средств для детского хосписа</span></li>
+                                        </ul>
+                                    </div>
+                                    <a href="#" style="font-size:13px; color:#2e7d32; margin-top:8px; display:inline-block;">Подробнее о забеге ></a>
+                                </div>
+                                <div class="card-actions">
+                                    <div class="date-block">
+                                        <div class="date-label">Дата и время</div>
+                                        <div class="date-value">1 июня, 09:00</div>
+                                    </div>
+                                    <div class="bonus-tag" style="background:#e8f5e9; color:#2e7d32;">
+                                        <span class="material-symbols-outlined" style="font-size:12px;">check</span> Регистрация открыта
+                                    </div>
+                                    <div class="price-tag">500 ₽</div>
+                                    <button class="btn-full"><span class="material-symbols-outlined" style="font-size:18px;">how_to_reg</span> Зарегистрироваться</button>
+                                </div>
+                            </div>
+
+                            <!-- Карточка 2 -->
+                            <div class="horizontal-card">
+                                <div class="card-img-wrap">
+                                    <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=600" alt="Football">
+                                </div>
+                                <div class="card-content">
+                                    <div>
+                                        <span class="card-badge-small sport-badge">Футбол</span>
+                                        <h3 class="card-title">Секция футбола для подростков "Белогорье"</h3>
+                                        <div class="card-subtitle">СДЮСШОР №3, тренер: Иванов А.С.</div>
+                                        <ul class="card-specs">
+                                            <li><span>Возраст:</span> <span>12-16 лет</span></li>
+                                            <li><span>Расписание:</span> <span>Пн, Ср, Пт 17:00-19:00</span></li>
+                                            <li><span>Адрес:</span> <span>Стадион "Салют", запасное поле</span></li>
+                                            <li><span>Тренер:</span> <span>Мастер спорта, стаж 15 лет</span></li>
+                                        </ul>
+                                    </div>
+                                    <a href="#" style="font-size:13px; color:#2e7d32; margin-top:8px; display:inline-block;">Подробнее о секции ></a>
+                                </div>
+                                <div class="card-actions">
+                                    <div class="date-block">
+                                        <div class="date-label">Начало занятий</div>
+                                        <div class="date-value">15 мая</div>
+                                    </div>
+                                    <div class="bonus-tag" style="background:#e8f5e9; color:#2e7d32;">
+                                        <span class="material-symbols-outlined" style="font-size:12px;">check</span> 5 мест осталось
+                                    </div>
+                                    <div class="price-tag">2 500 ₽/мес</div>
+                                    <button class="btn-full"><span class="material-symbols-outlined" style="font-size:18px;">edit_square</span> Записаться</button>
+                                </div>
+                            </div>
+
+                            <!-- Карточка 3 -->
+                            <div class="horizontal-card">
+                                <div class="card-img-wrap">
+                                    <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&q=80&w=600" alt="Yoga">
+                                </div>
+                                <div class="card-content">
+                                    <div>
+                                        <span class="card-badge-small sport-badge">Йога</span>
+                                        <h3 class="card-title">Йога в парке: Утренние практики</h3>
+                                        <div class="card-subtitle">Бесплатный проект "Здоровый город"</div>
+                                        <ul class="card-specs">
+                                            <li><span>Уровень:</span> <span>Начинающий, продолжающий</span></li>
+                                            <li><span>Расписание:</span> <span>Пн, Ср, Пт 07:00-08:00</span></li>
+                                            <li><span>Инструктор:</span> <span>Сертифицированный тренер по йоге</span></li>
+                                            <li><span>Что брать:</span> <span>Коврик, воду, удобную одежду</span></li>
+                                        </ul>
+                                    </div>
+                                    <a href="#" style="font-size:13px; color:#2e7d32; margin-top:8px; display:inline-block;">Подробнее о занятиях ></a>
+                                </div>
+                                <div class="card-actions">
+                                    <div class="date-block">
+                                        <div class="date-label">Ближайшее занятие</div>
+                                        <div class="date-value">Понедельник, 07:00</div>
+                                    </div>
+                                    <div class="bonus-tag" style="background:#e8f5e9; color:#2e7d32;">
+                                        <span class="material-symbols-outlined" style="font-size:12px;">check</span> Бесплатно
+                                    </div>
+                                    <button class="btn-outline"><span class="material-symbols-outlined" style="font-size:18px;">bookmark</span> Добавить в календарь</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             <div class="tab-content" id="self-realization">
+                <div class="filter-layout">
+                    <div class="filters-col">
+                        <div class="filters-sidebar">
+                            <div class="filter-group">
+                                <div class="toggle-row">
+                                    <span style="font-size:14px; font-weight:500;">С грантовой поддержкой</span>
+                                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                                </div>
+                                <div class="toggle-row">
+                                    <span style="font-size:14px; font-weight:500;">Стипендии</span>
+                                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                                </div>
+                            </div>
+
+                            <div class="filter-group">
+                                <div class="filter-title">Направление <span class="material-symbols-outlined">expand_less</span></div>
+                                <div class="checkbox-row"><input type="checkbox" checked>Гранты</div>
+                                <div class="checkbox-row"><input type="checkbox">Конкурсы</div>
+                                <div class="checkbox-row"><input type="checkbox">Стажировки</div>
+                                <div class="checkbox-row"><input type="checkbox">Хакатоны</div>
+                                <div class="checkbox-row"><input type="checkbox">Волонтерство</div>
+                                <div class="checkbox-row"><input type="checkbox">Форумы</div>
+                                <div class="checkbox-row"><input type="checkbox">Стажировки за рубежом</div>
+                            </div>
+
+                            <div class="filter-group">
+                                <div class="filter-title">Сфера <span class="material-symbols-outlined">expand_less</span></div>
+                                <div class="checkbox-row"><input type="checkbox">IT и технологии</div>
+                                <div class="checkbox-row"><input type="checkbox" checked>Социальные проекты</div>
+                                <div class="checkbox-row"><input type="checkbox">Культура и искусство</div>
+                                <div class="checkbox-row"><input type="checkbox">Наука и образование</div>
+                                <div class="checkbox-row"><input type="checkbox">Предпринимательство</div>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <div class="filter-title">Формат участия <span class="material-symbols-outlined">expand_less</span></div>
+                                <div class="checkbox-row"><input type="checkbox" checked>Онлайн</div>
+                                <div class="checkbox-row"><input type="checkbox">Офлайн</div>
+                                <div class="checkbox-row"><input type="checkbox">Гибридный</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-col">
+                        <div class="section-banner selfreal-banner">
+                            <div class="banner-content">
+                                <div class="banner-title selfreal-title">Самореализация и развитие</div>
+                                <div style="color: #444; font-size: 14px; line-height: 1.5;">Гранты, конкурсы, стажировки и волонтерство.<br>Раскройте свой потенциал!</div>
+                                <button class="banner-btn selfreal-btn">
+                                    <span class="material-symbols-outlined" style="font-size:18px;">auto_awesome</span> Мои заявки
+                                </button>
+                            </div>
+                            <span class="material-symbols-outlined" style="font-size: 120px; color: #fff; opacity: 0.5; position:absolute; right: -20px;">rocket_launch</span>
+                        </div>
+
+                        <div class="sort-bar">
+                            <div style="display:flex; align-items:center;">
+                                <span style="font-size:14px; color:#666;">Сортировать по:</span>
+                                <select class="sort-select">
+                                    <option>Дедлайну</option>
+                                    <option>Размеру гранта</option>
+                                    <option>Популярности</option>
+                                    <option>Дате начала</option>
+                                </select>
+                            </div>
+                            <div style="color:#ccc;">
+                                <span class="material-symbols-outlined" style="cursor:pointer; color:#005bff;">view_list</span>
+                                <span class="material-symbols-outlined" style="cursor:pointer; margin-left:8px;">grid_view</span>
+                            </div>
+                        </div>
+
+                        <div class="cards-list">
+                            <!-- Карточка 1 -->
+                            <div class="horizontal-card">
+                                <div class="card-img-wrap">
+                                    <img src="https://images.unsplash.com/photo-1544531586-fde5298cdd40?auto=format&fit=crop&q=80&w=600" alt="Grant">
+                                </div>
+                                <div class="card-content">
+                                    <div>
+                                        <span class="card-badge-small selfreal-badge">Грант</span>
+                                        <h3 class="card-title">Конкурс молодежных проектов "Время действовать"</h3>
+                                        <div class="card-subtitle">Организатор: Управление молодежной политики Белгородской области</div>
+                                        <ul class="card-specs">
+                                            <li><span>Размер гранта:</span> <span>до 500 000 ₽</span></li>
+                                            <li><span>Направления:</span> <span>Социальные, экологические, творческие проекты</span></li>
+                                            <li><span>Участники:</span> <span>Молодежь 14-35 лет</span></li>
+                                            <li><span>Дедлайн:</span> <span style="color:#d32f2f; font-weight:600;">15 мая 2024</span></li>
+                                        </ul>
+                                    </div>
+                                    <a href="#" style="font-size:13px; color:#ef6c00; margin-top:8px; display:inline-block;">Подробнее о конкурсе ></a>
+                                </div>
+                                <div class="card-actions">
+                                    <div class="date-block">
+                                        <div class="date-label">Прием заявок до</div>
+                                        <div class="date-value" style="color:#d32f2f;">15 мая</div>
+                                    </div>
+                                    <div class="bonus-tag">
+                                        <span class="material-symbols-outlined" style="font-size:12px;">payments</span> Грант до 500К
+                                    </div>
+                                    <div class="price-tag">Бесплатно</div>
+                                    <button class="btn-full"><span class="material-symbols-outlined" style="font-size:18px;">edit_document</span> Подать заявку</button>
+                                </div>
+                            </div>
+
+                            <!-- Карточка 2 -->
+                            <div class="horizontal-card">
+                                <div class="card-img-wrap">
+                                    <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=600" alt="Hackathon">
+                                </div>
+                                <div class="card-content">
+                                    <div>
+                                        <span class="card-badge-small selfreal-badge">Хакатон</span>
+                                        <h3 class="card-title">Региональный хакатон "Цифровой прорыв: Белгород"</h3>
+                                        <div class="card-subtitle">Партнеры: Яндекс, Сбер, ВК, правительство области</div>
+                                        <ul class="card-specs">
+                                            <li><span>Треки:</span> <span>Образование, Медицина, Умный город</span></li>
+                                            <li><span>Призы:</span> <span>300К, 200К, 100К ₽ + стажировки</span></li>
+                                            <li><span>Формат:</span> <span>Онлайн-отбор, очный финал</span></li>
+                                            <li><span>Команды:</span> <span>3-5 человек</span></li>
+                                        </ul>
+                                    </div>
+                                    <a href="#" style="font-size:13px; color:#ef6c00; margin-top:8px; display:inline-block;">Подробнее о хакатоне ></a>
+                                </div>
+                                <div class="card-actions">
+                                    <div class="date-block">
+                                        <div class="date-label">Даты проведения</div>
+                                        <div class="date-value">10-12 июня</div>
+                                    </div>
+                                    <div class="bonus-tag">
+                                        <span class="material-symbols-outlined" style="font-size:12px;">workspace_premium</span> Призы до 300К
+                                    </div>
+                                    <button class="btn-full"><span class="material-symbols-outlined" style="font-size:18px;">group_add</span> Создать команду</button>
+                                </div>
+                            </div>
+
+                            <!-- Карточка 3 -->
+                            <div class="horizontal-card">
+                                <div class="card-img-wrap">
+                                    <img src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&q=80&w=600" alt="Volunteer">
+                                </div>
+                                <div class="card-content">
+                                    <div>
+                                        <span class="card-badge-small selfreal-badge">Волонтерство</span>
+                                        <h3 class="card-title">Набор волонтеров на День города Белгорода</h3>
+                                        <div class="card-subtitle">Волонтерский центр "Доброе дело"</div>
+                                        <ul class="card-specs">
+                                            <li><span>Направления:</span> <span>Гид-встречающий, помощь на площадках, фото/видео</span></li>
+                                            <li><span>Обучение:</span> <span>Бесплатный тренинг 20-21 июля</span></li>
+                                            <li><span>Бонусы:</span> <span>Форма, питание, благодарность, +50 баллов в рейтинг</span></li>
+                                            <li><span>Дата события:</span> <span>5 августа 2024</span></li>
+                                        </ul>
+                                    </div>
+                                    <a href="#" style="font-size:13px; color:#ef6c00; margin-top:8px; display:inline-block;">Подробнее о волонтерстве ></a>
+                                </div>
+                                <div class="card-actions">
+                                    <div class="date-block">
+                                        <div class="date-label">Набор до</div>
+                                        <div class="date-value">10 июля</div>
+                                    </div>
+                                    <div class="bonus-tag">
+                                        <span class="material-symbols-outlined" style="font-size:12px;">stars</span> +50 баллов в рейтинг
+                                    </div>
+                                    <button class="btn-full"><span class="material-symbols-outlined" style="font-size:18px;">volunteer_activism</span> Стать волонтером</button>
+                                </div>
+                            </div>
+
+                            <!-- Карточка 4 - Стипендия -->
+                            <div class="horizontal-card">
+                                <div class="card-img-wrap">
+                                    <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=600" alt="Scholarship">
+                                </div>
+                                <div class="card-content">
+                                    <div>
+                                        <span class="card-badge-small selfreal-badge">Стипендия</span>
+                                        <h3 class="card-title">Стипендия Губернатора для одаренной молодежи</h3>
+                                        <div class="card-subtitle">Правительство Белгородской области</div>
+                                        <ul class="card-specs">
+                                            <li><span>Размер:</span> <span>10 000 ₽/мес (на 1 год)</span></li>
+                                            <li><span>Критерии:</span> <span>Учеба, научная работа, спорт, творчество</span></li>
+                                            <li><span>Кто может:</span> <span>Студенты вузов и ссузов области</span></li>
+                                            <li><span>Документы:</span> <span>Заявка, портфолио, рекомендации</span></li>
+                                        </ul>
+                                    </div>
+                                    <a href="#" style="font-size:13px; color:#ef6c00; margin-top:8px; display:inline-block;">Подробнее о стипендии ></a>
+                                </div>
+                                <div class="card-actions">
+                                    <div class="date-block">
+                                        <div class="date-label">Прием до</div>
+                                        <div class="date-value" style="color:#d32f2f;">25 мая</div>
+                                    </div>
+                                    <div class="bonus-tag">
+                                        <span class="material-symbols-outlined" style="font-size:12px;">school</span> 120 000 ₽ в год
+                                    </div>
+                                    <button class="btn-full"><span class="material-symbols-outlined" style="font-size:18px;">edit_document</span> Подать заявку</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             </div>
+
+            <div class="tab-content" id="dpo">
+                <div class="filter-layout">
+                    <div class="filters-col">
+                        <div class="filters-sidebar">
+                            <div class="filter-group">
+                                <div class="toggle-row">
+                                    <span style="font-size:14px; font-weight:500;">Только проверенные</span>
+                                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                                </div>
+                                <div class="toggle-row">
+                                    <span style="font-size:14px; font-weight:500;">Идет набор</span>
+                                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                                </div>
+                            </div>
+
+                            <div class="filter-group">
+                                <div class="filter-title">Города <span class="material-symbols-outlined">expand_less</span></div>
+                                <div class="checkbox-row"><input type="checkbox" checked>Белгород</div>
+                                <div class="checkbox-row"><input type="checkbox">Старый Оскол</div>
+                                <div class="checkbox-row"><input type="checkbox">Губкин</div>
+                                <a href="#" style="font-size:13px; color:#005bff; margin-left:26px;">Показать все</a>
+                            </div>
+
+                            <div class="filter-group">
+                                <div class="filter-title">Направление <span class="material-symbols-outlined">expand_less</span></div>
+                                <div class="checkbox-row"><input type="checkbox">IT и Программирование</div>
+                                <div class="checkbox-row"><input type="checkbox">Дизайн</div>
+                                <div class="checkbox-row"><input type="checkbox">Иностранные языки</div>
+                                <div class="checkbox-row"><input type="checkbox">Маркетинг</div>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <div class="filter-title">Способ оплаты <span class="material-symbols-outlined">expand_less</span></div>
+                                <div class="checkbox-row"><input type="checkbox">Бесплатно (Бюджет)</div>
+                                <div class="checkbox-row"><input type="checkbox">Пушкинская карта</div>
+                                <div class="checkbox-row"><input type="checkbox">Сертификат ПФДО</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-col">
+                        <div class="section-banner dpo-banner">
+                            <div class="banner-content">
+                                <div class="banner-title dpo-title">Организации рядом</div>
+                                <div style="color: #444; font-size: 14px; line-height: 1.5;">Найдено 15 организаций в радиусе 5 км.<br>Подберите кружки и секции рядом с домом.</div>
+                                <button class="banner-btn dpo-btn">
+                                    <span class="material-symbols-outlined" style="font-size:18px;">map</span> Открыть карту
+                                </button>
+                            </div>
+                            <span class="material-symbols-outlined" style="font-size: 120px; color: #fff; opacity: 0.5; position:absolute; right: -20px;">public</span>
+                        </div>
+
+                        <div class="sort-bar">
+                            <div style="display:flex; align-items:center;">
+                                <span style="font-size:14px; color:#666;">Сортировать по:</span>
+                                <select class="sort-select">
+                                    <option>Популярности</option>
+                                    <option>Рейтингу</option>
+                                    <option>Цене (сначала дешевые)</option>
+                                </select>
+                            </div>
+                            <div style="color:#ccc;">
+                                <span class="material-symbols-outlined" style="cursor:pointer; color:#005bff;">view_list</span>
+                                <span class="material-symbols-outlined" style="cursor:pointer; margin-left:8px;">grid_view</span>
+                            </div>
+                        </div>
+
+                        <div class="cards-list">
+                            
+                            <div class="horizontal-card">
+                                <div class="card-img-wrap">
+                                    <img src="https://static.tildacdn.com/tild3530-3432-4131-b664-323330666336/_-1.png" alt="IT Cube">
+                                </div>
+                                <div class="card-content">
+                                    <div>
+                                        <span class="card-badge-small dpo-badge">Бюджетные места</span>
+                                        <h3 class="card-title">Центр цифрового образования "IT-Куб"</h3>
+                                        <div class="card-subtitle">ГБОУ "Белгородский инженерный юношеский лицей"</div>
+                                        <ul class="card-specs">
+                                            <li><span>Программы:</span> <span>Python, Java, VR/AR, Робототехника</span></li>
+                                            <li><span>Возраст:</span> <span>12 - 18 лет</span></li>
+                                            <li><span>Формат:</span> <span>Офлайн</span></li>
+                                            <li><span>Адрес:</span> <span>г. Белгород, ул. Королева, 7</span></li>
+                                        </ul>
+                                    </div>
+                                    <a href="#" style="font-size:13px; color:#005bff; margin-top:8px; display:inline-block;">Подробнее об организации ></a>
+                                </div>
+                                <div class="card-actions">
+                                    <div class="price-tag">Бесплатно</div>
+                                    <div class="bonus-tag">
+                                        <span class="material-symbols-outlined" style="font-size:12px;">verified</span> Гос. учреждение
+                                    </div>
+                                    <div class="rating-block">
+                                        <span class="material-symbols-outlined star">star</span>
+                                        <span style="font-weight:700;">4.9</span>
+                                        <span style="color:#999;">(128)</span>
+                                    </div>
+                                    <button class="btn-full"><span class="material-symbols-outlined" style="font-size:18px;">edit_square</span> Записаться</button>
+                                </div>
+                            </div>
+
+                            <div class="horizontal-card">
+                                <div class="card-img-wrap">
+                                    <img src="https://avatars.dzeninfra.ru/get-zen_doc/1585293/pub_5dcd6c54720717208d98d45d_5dcd6cb21e8e3f00adeae464/scale_1200" alt="Kvantorium">
+                                </div>
+                                <div class="card-content">
+                                    <div>
+                                        <span class="card-badge-small dpo-badge" style="background:#fff3e0; color:#e65100;">Осталось 5 мест</span>
+                                        <h3 class="card-title">Детский технопарк "Кванториум"</h3>
+                                        <div class="card-subtitle">ОГАОУ ДПО "БелИРО"</div>
+                                        <ul class="card-specs">
+                                            <li><span>Программы:</span> <span>Аэроквантум, Биоквантум, Хайтек</span></li>
+                                            <li><span>Возраст:</span> <span>10 - 17 лет</span></li>
+                                            <li><span>Адрес:</span> <span>г. Белгород, ул. Есенина, 52</span></li>
+                                        </ul>
+                                    </div>
+                                    <a href="#" style="font-size:13px; color:#005bff; margin-top:8px; display:inline-block;">Подробнее об организации ></a>
+                                </div>
+                                <div class="card-actions">
+                                    <div class="price-tag">от 2 500 ₽</div>
+                                    <div class="bonus-tag" style="background:#e8eaed; color:#333;">
+                                        ПФДО Сертификат
+                                    </div>
+                                    <div class="rating-block">
+                                        <span class="material-symbols-outlined star">star</span>
+                                        <span style="font-weight:700;">4.8</span>
+                                        <span style="color:#999;">(84)</span>
+                                    </div>
+                                    <button class="btn-outline"><span class="material-symbols-outlined" style="font-size:18px;">shopping_cart</span> В корзину</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('.sidebar-link[data-tab]');
+            const tabs = document.querySelectorAll('.tab-content');
+
+            links.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // 1. Remove active class from all links
+                    links.forEach(l => l.classList.remove('active'));
+                    // 2. Add active to clicked link
+                    link.classList.add('active');
+
+                    // 3. Hide all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // 4. Show target tab
+                    const targetId = link.getAttribute('data-tab');
+                    const targetTab = document.getElementById(targetId);
+                    if(targetTab) {
+                        targetTab.classList.add('active');
+                        // Scroll top to simulate new page feel
+                        window.scrollTo(0,0);
+                    }
+                });
+            });
+
+            // Optional: Collapsible filters logic
+            document.querySelectorAll('.filter-title').forEach(title => {
+                title.addEventListener('click', () => {
+                    const icon = title.querySelector('.material-symbols-outlined');
+                    if(icon) {
+                        icon.textContent = icon.textContent === 'expand_less' ? 'expand_more' : 'expand_less';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

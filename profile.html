@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Молодежь Белогорья</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Дополнительные стили для профиля */
+        .profile-stats {
+            display: flex;
+            gap: 24px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            min-width: 180px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid var(--separator);
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: 8px;
+            font-family: 'Oswald', sans-serif;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .personal-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+        
+        .info-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid var(--separator);
+        }
+        
+        .info-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-main);
+            font-family: 'Oswald', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .info-item {
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--separator);
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .info-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .info-value {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+        
+        .edit-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        
+        .edit-btn:hover {
+            background: #0052a3;
+            transform: translateY(-1px);
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            gap: 4px;
+        }
+        
+        .level-indicator {
+            width: 100%;
+            height: 8px;
+            background: var(--separator);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+        
+        .level-progress {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        
+        .achievement-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid var(--separator);
+            transition: transform 0.2s;
+        }
+        
+        .achievement-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .achievement-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 24px;
+        }
+        
+        .achievement-info {
+            flex: 1;
+        }
+        
+        .achievement-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-main);
+        }
+        
+        .achievement-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .achievement-date {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+        
+        .empty-state .material-symbols-outlined {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: var(--separator);
+        }
+        
+        .empty-state h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+        
+        .avatar-upload {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .avatar-upload-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 3px solid white;
+        }
+        
+        .avatar-upload-btn:hover {
+            background: #0052a3;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <span class="material-symbols-outlined menu-icon">menu</span>
+            <div class="logo-container" onclick="window.location.href='index.html'">
+                <div class="logo-text">
+                    <img src="logo.svg" alt="Логотип Молодежь Белогорья" class="logo-img">
+                </div>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="search-box">
+                <div class="search-input-wrapper">
+                    <input type="text" placeholder="Введите запрос">
+                    <span class="material-symbols-outlined" style="color: #606060; font-size: 20px; cursor: pointer; margin-right: 8px;">keyboard</span>
+                </div>
+                <button class="search-btn">
+                    <span class="material-symbols-outlined">search</span>
+                </button>
+                <button class="mic-btn">
+                    <span class="material-symbols-outlined">mic</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <span class="material-symbols-outlined" style="cursor: pointer; color: #606060;">notifications</span>
+            <div class="avatar">A</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside>
+            <div class="sidebar-section">
+                <a href="index.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">home</span>
+                    Главная
+                </a>
+                <a href="success-stories.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">emoji_events</span> Истории успеха
+                </a>
+                <a href="leaderboard.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">military_tech</span>
+                    Список лидеров
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+              <div class="section-title">Направления</div>
+                <a href="direction.html"  class="sidebar-link dir-praktikuisya" data-direction="praktikuisya">
+                    <span class="material-symbols-outlined">model_training</span>
+                    Практикуйся
+                </a>
+                <a href="direction.html"  class="sidebar-link dir-pobezhdaj" data-direction="pobezhdaj">
+                    <span class="material-symbols-outlined">workspace_premium</span>
+                    Побеждай
+                </a>
+                <a href="direction.html"  class="sidebar-link dir-sport" data-direction="sport">
+                    <span class="material-symbols-outlined">sports_basketball</span>
+                    Спорт
+                </a>
+                <a href="direction.html"  class="sidebar-link dir-vdohnovlyajsya" data-direction="vdohnovlyajsya">
+                    <span class="material-symbols-outlined">auto_awesome</span>
+                    Вдохновляйся
+                </a>
+                <a href="direction.html"  class="sidebar-link dir-razvivajsya" data-direction="razvivajsya">
+                    <span class="material-symbols-outlined">lightbulb</span>
+                    Развивайся
+                </a>
+                <a href="direction.html" class="sidebar-link dir-bud-priznan" data-direction="bud-priznan">
+                    <span class="material-symbols-outlined">stars</span>
+                    Будь признан
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <a href="profile.html" class="sidebar-link active">
+                    <span class="material-symbols-outlined">account_circle</span>
+                    Профиль
+                </a>
+                <a href="applications.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">description</span>
+                    Заявки
+                </a>
+                <a href="projects.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">account_tree</span>
+                    Мои проекты
+                </a>
+                <a href="points-exchange.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">redeem</span>
+                    Обмен баллов
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">Навигатор</div>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">theater_comedy</span>
+                    Культурные мероприятия
+                </a>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">fitness_center</span>
+                    Спорт
+                </a>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">school</span>
+                    ДПО организации
+                </a>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">explore</span>
+                    Возможности самореализации
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <div class="section-title">Другие возможности</div>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined" style="color: #00ff11;">smart_toy</span>
+                    Ai куратор
+                </a>
+                <a href="searching.html" class="sidebar-link">
+                    <span class="material-symbols-outlined" style="color: #0055ff;">group_add</span>
+                    Найти команду в проект
+                </a>
+                    <a href="searchnastavnik.html" class="sidebar-link">
+                    <span class="material-symbols-outlined" style="color: #ff00aa;">group_add</span>
+                    Найти наставника
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">settings</span>
+                    Настройки
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">help_outline</span>
+                    Справка
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">mail</span>
+                    Связаться с нами
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">settings</span>
+                    Настройки
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">help_outline</span>
+                    Справка
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">mail</span>
+                    Связаться с нами
+                </a>
+            </div>
+
+            <div class="sidebar-section no-border">
+                <div class="footer-links">
+                    <a href="#">О проекте</a>
+                    <a href="#">Направления</a>
+                    <a href="#">Связаться с нами</a>
+                    <a href="#">Организация</a>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Условия</a>
+                    <a href="#">Конфиденциальность</a>
+                </div>
+                <div class="copyright">
+                    © 2026 MolodezhBelogoria
+                </div>
+            </div>
+        </aside>
+
+        <main style="background-color: #f9f9f9; padding: 0;">
+            <div style="background: linear-gradient(135deg, var(--primary) 0%, #0052a3 100%); color: white; padding: 32px 24px;">
+                <div style="max-width: 1284px; margin: 0 auto;">
+                    <div class="profile-header" style="color: white;">
+                        <div class="avatar-upload">
+                            <div class="profile-avatar-large" style="background: white; color: var(--primary); font-size: 64px; width: 120px; height: 120px; border: 4px solid white;">M</div>
+                            <div class="avatar-upload-btn">
+                                <span class="material-symbols-outlined">edit</span>
+                            </div>
+                        </div>
+                        <div class="profile-info">
+                            <div class="profile-name" style="color: white;">Марк Нудель</div>
+                            <div class="profile-meta" style="color: rgba(255,255,255,0.9);">
+                                <span class="badge" style="background: rgba(255,255,255,0.2); color: white;">Ученик</span>
+                                <span style="margin: 0 8px;">•</span>
+                                Гимназия №1 • Белгород
+                            </div>
+                            <div class="profile-buttons">
+                                <button class="edit-btn">
+                                    <span class="material-symbols-outlined">edit</span>
+                                    Редактировать профиль
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-stats" style="max-width: 1284px; margin: 20px auto; padding: 0 24px;">
+                <div class="stat-card">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Достижений</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Проекта</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">856</div>
+                    <div class="stat-label">Баллов рейтинга</div>
+                    <div class="level-indicator">
+                        <div class="level-progress" style="width: 65%"></div>
+                    </div>
+                    <div class="stat-label" style="font-size: 12px;">Уровень: Опытный</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Активных заявок</div>
+                </div>
+            </div>
+
+            <div class="profile-tabs-container" style="max-width: 1284px; margin: 0 auto; padding: 0 24px;">
+                <div class="profile-tabs">
+                    <div class="tab-item active" data-tab="portfolio">Портфолио</div>
+                    <div class="tab-item" data-tab="personal">Личные данные</div>
+                    <div class="tab-item" data-tab="documents">Документы</div>
+                    <div class="tab-item" data-tab="education">Образование</div>
+                    <div class="tab-item" data-tab="organizations">Организации</div>
+                </div>
+            </div>
+
+            <div class="profile-content" style="padding-bottom: 48px;">
+                <!-- Портфолио -->
+                <div id="portfolio" class="tab-content active">
+                    <div class="portfolio-actions" style="max-width: 1284px; margin: 0 auto; padding: 24px 24px 0;">
+                        <button class="add-achievement-btn">
+                            <span class="material-symbols-outlined">add</span>
+                            Добавить достижение
+                        </button>
+                        
+                        <div class="content-filter" style="margin-left: auto; margin-bottom: 0;">
+                            Сортировать: <span style="font-weight: bold; margin-left: 5px;">По дате</span> 
+                            <span class="material-symbols-outlined">expand_more</span>
+                        </div>
+                    </div>
+                    
+                    <div class="portfolio-grid" style="max-width: 1284px; margin: 0 auto; padding: 24px;">
+                        <div class="portfolio-card">
+                            <div class="p-card-body">
+                                <div class="p-date">11 июля 2025</div>
+                                <div class="p-title">Конкурс "Инношкольник"</div>
+                                <div class="p-subtitle">Всероссийский конкурс инновационных проектов</div>
+                                
+                                <div class="p-status-row">
+                                    <div class="p-stats">
+                                        <span class="p-label">Коэфф.</span>
+                                        <span class="p-value">100</span>
+                                    </div>
+                                    <div class="p-stats">
+                                        <span class="p-label">Место</span>
+                                    </div>
+                                    <div class="p-status-text">
+                                        Финалист<br>конкурсного<br>отбора
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#" class="p-card-footer">
+                                <span class="material-symbols-outlined">download</span>
+                                Диплом_Инношкольник.pdf
+                            </a>
+                        </div>
+
+                        <div class="portfolio-card">
+                            <div class="p-card-body">
+                                <div class="p-date">15 июня 2025</div>
+                                <div class="p-title">Олимпиада по программированию</div>
+                                <div class="p-subtitle">Региональный этап всероссийской олимпиады</div>
+                                
+                                <div class="p-status-row">
+                                    <div class="p-stats">
+                                        <span class="p-label">Баллы</span>
+                                        <span class="p-value">92</span>
+                                    </div>
+                                    <div class="p-stats">
+                                        <span class="p-label">Место</span>
+                                        <span class="p-status-text-inline">1 место</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#" class="p-card-footer">
+                                <span class="material-symbols-outlined">download</span>
+                                Диплом_Олимпиада.pdf
+                            </a>
+                        </div>
+                        
+                        <div class="achievement-card">
+                            <div class="achievement-icon">
+                                <span class="material-symbols-outlined">workspace_premium</span>
+                            </div>
+                            <div class="achievement-info">
+                                <div class="achievement-title">Волонтер года 2024</div>
+                                <div class="achievement-description">За активное участие в социальных проектах</div>
+                                <div class="achievement-date">Декабрь 2024</div>
+                            </div>
+                            <button class="edit-btn" style="padding: 8px 16px; font-size: 12px;">
+                                <span class="material-symbols-outlined">visibility</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Личные данные -->
+                <div id="personal" class="tab-content">
+                    <div style="max-width: 1284px; margin: 0 auto; padding: 24px;">
+                        <div class="personal-info-grid">
+                            <div class="info-card">
+                                <h3><span class="material-symbols-outlined">person</span> Основная информация</h3>
+                                <div class="info-item">
+                                    <div class="info-label">ФИО</div>
+                                    <div class="info-value">Нудель Марк Игоревич</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Дата рождения</div>
+                                    <div class="info-value">15 марта 2008 года</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Пол</div>
+                                    <div class="info-value">Мужской</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Гражданство</div>
+                                    <div class="info-value">Российская Федерация</div>
+                                </div>
+                            </div>
+
+                            <div class="info-card">
+                                <h3><span class="material-symbols-outlined">contact_phone</span> Контакты</h3>
+                                <div class="info-item">
+                                    <div class="info-label">Телефон</div>
+                                    <div class="info-value">+7 (900) 123-45-67</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Email</div>
+                                    <div class="info-value">mark.nudel@example.com</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Telegram</div>
+                                    <div class="info-value">@mark_nudel</div>
+                                </div>
+                            </div>
+
+                            <div class="info-card">
+                                <h3><span class="material-symbols-outlined">location_on</span> Адрес</h3>
+                                <div class="info-item">
+                                    <div class="info-label">Город</div>
+                                    <div class="info-value">Белгород</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Адрес проживания</div>
+                                    <div class="info-value">ул. Студенческая, д. 15, кв. 42</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Почтовый индекс</div>
+                                    <div class="info-value">308000</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Документы -->
+                <div id="documents" class="tab-content">
+                    <div style="max-width: 1284px; margin: 0 auto; padding: 24px;">
+                        <div class="personal-info-grid">
+                            <div class="info-card">
+                                <h3><span class="material-symbols-outlined">badge</span> Паспортные данные</h3>
+                                <div class="info-item">
+                                    <div class="info-label">Серия и номер</div>
+                                    <div class="info-value">1234 567890</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Кем выдан</div>
+                                    <div class="info-value">ОУФМС России по Белгородской области</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Дата выдачи</div>
+                                    <div class="info-value">15.03.2023</div>
+                                </div>
+                            </div>
+
+                            <div class="info-card">
+                                <h3><span class="material-symbols-outlined">school</span> Образовательные документы</h3>
+                                <div class="info-item">
+                                    <div class="info-label">Свидетельство о рождении</div>
+                                    <div class="info-value">III-АБ №123456</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Медицинская справка</div>
+                                    <div class="info-value">Действует до 15.09.2026</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">СНИЛС</div>
+                                    <div class="info-value">123-456-789 00</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 32px;">
+                            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px; color: var(--text-main); font-family: 'Oswald', sans-serif;">Загруженные документы</h3>
+                            <div class="achievement-card">
+                                <div class="achievement-icon" style="background: var(--success); color: white;">
+                                    <span class="material-symbols-outlined">description</span>
+                                </div>
+                                <div class="achievement-info">
+                                    <div class="achievement-title">Скан паспорта</div>
+                                    <div class="achievement-description">Основной разворот и прописка</div>
+                                    <div class="achievement-date">Загружено: 15.03.2023</div>
+                                </div>
+                                <button class="edit-btn" style="padding: 8px 16px; font-size: 12px;">
+                                    <span class="material-symbols-outlined">download</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Образование -->
+                <div id="education" class="tab-content">
+                    <div style="max-width: 1284px; margin: 0 auto; padding: 24px;">
+                        <div class="personal-info-grid">
+                            <div class="info-card">
+                                <h3><span class="material-symbols-outlined">school</span> Основное образование</h3>
+                                <div class="info-item">
+                                    <div class="info-label">Учебное заведение</div>
+                                    <div class="info-value">Гимназия №1 г. Белгорода</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Класс</div>
+                                    <div class="info-value">10 "А" класс</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Профиль</div>
+                                    <div class="info-value">Физико-математический</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Год окончания</div>
+                                    <div class="info-value">2027 (ожидаемый)</div>
+                                </div>
+                            </div>
+
+                            <div class="info-card">
+                                <h3><span class="material-symbols-outlined">auto_stories</span> Дополнительное образование</h3>
+                                <div class="info-item">
+                                    <div class="info-label">Курсы программирования</div>
+                                    <div class="info-value">Яндекс.Лицей (2023-2024)</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Спортивная секция</div>
+                                    <div class="info-value">Баскетбол, ДЮСШ №3</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Иностранные языки</div>
+                                    <div class="info-value">Английский (B2), Немецкий (A2)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 32px;">
+                            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px; color: var(--text-main); font-family: 'Oswald', sans-serif;">Успеваемость</h3>
+                            <div class="info-card">
+                                <div class="info-item">
+                                    <div class="info-label">Средний балл</div>
+                                    <div class="info-value" style="font-size: 24px; font-weight: 700; color: var(--primary);">4.8</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Любимые предметы</div>
+                                    <div class="info-value">Математика, Физика, Информатика</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Научные интересы</div>
+                                    <div class="info-value">Программирование, Робототехника, Искусственный интеллект</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Организации -->
+                <div id="organizations" class="tab-content">
+                    <div style="max-width: 1284px; margin: 0 auto; padding: 24px;">
+                        <div class="personal-info-grid">
+                            <div class="info-card">
+                                <h3><span class="material-symbols-outlined">groups</span> Членство в организациях</h3>
+                                <div class="info-item">
+                                    <div class="info-label">Российское движение детей и молодежи</div>
+                                    <div class="info-value">Активный участник (с 2023)</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Волонтерский центр "Добро"</div>
+                                    <div class="info-value">Волонтер (с 2022)</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Школьный научный клуб</div>
+                                    <div class="info-value">Президент клуба (с 2024)</div>
+                                </div>
+                            </div>
+
+                            <div class="info-card">
+                                <h3><span class="material-symbols-outlined">sports_basketball</span> Спортивные секции</h3>
+                                <div class="info-item">
+                                    <div class="info-label">Баскетбольная команда</div>
+                                    <div class="info-value">Капитан школьной команды</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Спортивные разряды</div>
+                                    <div class="info-value">II юношеский разряд по баскетболу</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 32px;">
+                            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px; color: var(--text-main); font-family: 'Oswald', sans-serif;">Достижения в организациях</h3>
+                            <div class="achievement-card">
+                                <div class="achievement-icon" style="background: var(--warning); color: white;">
+                                    <span class="material-symbols-outlined">emoji_events</span>
+                                </div>
+                                <div class="achievement-info">
+                                    <div class="achievement-title">Лучший волонтер месяца</div>
+                                    <div class="achievement-description">Волонтерский центр "Добро"</div>
+                                    <div class="achievement-date">Март 2025</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Переключение вкладок
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabItems = document.querySelectorAll('.tab-item');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabItems.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Убираем активный класс у всех вкладок
+                    tabItems.forEach(item => item.classList.remove('active'));
+                    // Добавляем активный класс текущей вкладке
+                    this.classList.add('active');
+                    
+                    // Получаем ID целевого контента
+                    const targetTab = this.getAttribute('data-tab');
+                    
+                    // Скрываем все контенты
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Показываем целевой контент
+                    document.getElementById(targetTab).classList.add('active');
+                });
+            });
+            
+            // Обработчик для кнопки загрузки аватара
+            const avatarUploadBtn = document.querySelector('.avatar-upload-btn');
+            if (avatarUploadBtn) {
+                avatarUploadBtn.addEventListener('click', function() {
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = 'image/*';
+                    input.onchange = function(event) {
+                        const file = event.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                const avatar = document.querySelector('.profile-avatar-large');
+                                avatar.textContent = '';
+                                avatar.style.backgroundImage = `url(${e.target.result})`;
+                                avatar.style.backgroundSize = 'cover';
+                                avatar.style.backgroundPosition = 'center';
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    };
+                    input.click();
+                });
+            }
+            
+            // Обработчик для кнопки редактирования профиля
+            const editBtn = document.querySelector('.edit-btn');
+            if (editBtn) {
+                editBtn.addEventListener('click', function() {
+                    alert('Редактирование профиля будет доступно в следующем обновлении!');
+                });
+            }
+            
+            // Обработчик для кнопки добавления достижения
+            const addAchievementBtn = document.querySelector('.add-achievement-btn');
+            if (addAchievementBtn) {
+                addAchievementBtn.addEventListener('click', function() {
+                    alert('Добавление нового достижения будет доступно в следующем обновлении!');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

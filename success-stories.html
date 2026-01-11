@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Молодежь Белогорья</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .stories-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #333;
+            font-family: 'Oswald', sans-serif;
+        }
+        
+        .page-subtitle {
+            color: #606060;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .stories-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .story-filter {
+            padding: 8px 20px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .story-filter.active {
+            background: #ff0000;
+            color: white;
+            border-color: #ff0000;
+        }
+        
+        .story-filter:hover {
+            background: #f5f5f5;
+        }
+        
+        .story-filter.active:hover {
+            background: #cc0000;
+        }
+        
+        .featured-story {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 40px;
+            color: white;
+            position: relative;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .featured-content {
+            padding: 40px;
+            max-width: 600px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .featured-tag {
+            display: inline-block;
+            padding: 5px 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .featured-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+        
+        .featured-excerpt {
+            font-size: 16px;
+            margin-bottom: 25px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .featured-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .featured-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 600;
+            border: 3px solid white;
+        }
+        
+        .author-info h4 {
+            margin: 0 0 5px 0;
+            font-size: 18px;
+        }
+        
+        .author-location {
+            opacity: 0.8;
+            font-size: 14px;
+        }
+        
+        .read-story-btn {
+            padding: 12px 30px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .read-story-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .featured-image {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            background: url('https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=1000&auto=format&fit=crop') center/cover;
+            clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);
+        }
+        
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .story-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .story-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .story-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .story-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .story-card:hover .story-image img {
+            transform: scale(1.05);
+        }
+        
+        .story-content {
+            padding: 25px;
+        }
+        
+        .story-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .story-category {
+            padding: 4px 12px;
+            background: #e3f2fd;
+            color: #1976d2;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .story-category.sport { background: #e8f5e9; color: #2e7d32; }
+        .story-category.pobeda { background: #fff3e0; color: #f57c00; }
+        .story-category.grant { background: #fce4ec; color: #c2185b; }
+        
+        .story-date {
+            color: #888;
+            font-size: 14px;
+        }
+        
+        .story-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            color: #333;
+        }
+        
+        .story-excerpt {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .story-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .story-author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .story-author-info h4 {
+            margin: 0 0 3px 0;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .story-author-location {
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .load-more {
+            text-align: center;
+            margin-top: 50px;
+        }
+        
+        .load-more-btn {
+            padding: 12px 40px;
+            background: white;
+            color: #ff0000;
+            border: 2px solid #ff0000;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+        
+        .load-more-btn:hover {
+            background: #ff0000;
+            color: white;
+        }
+        
+        .success-metrics {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .metrics-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            text-align: center;
+            color: #333;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .metric-item {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .metric-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #ff0000;
+            margin-bottom: 5px;
+        }
+        
+        .metric-label {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .featured-story {
+                flex-direction: column;
+                min-height: auto;
+            }
+            
+            .featured-content {
+                padding: 30px 20px;
+            }
+            
+            .featured-image {
+                position: relative;
+                width: 100%;
+                height: 250px;
+                clip-path: none;
+            }
+            
+            .featured-title {
+                font-size: 24px;
+            }
+            
+            .stories-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stories-filters {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <span class="material-symbols-outlined menu-icon">menu</span>
+            <div class="logo-container">
+                <div class="logo-text">
+                    <img src="logo.svg" alt="Логотип Молодежь Белогорья" class="logo-img">
+                </div>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="search-box">
+                <div class="search-input-wrapper">
+                    <input type="text" placeholder="Поиск историй успеха">
+                    <span class="material-symbols-outlined" style="color: #606060; font-size: 20px; cursor: pointer; margin-right: 8px;">keyboard</span>
+                </div>
+                <button class="search-btn">
+                    <span class="material-symbols-outlined">search</span>
+                </button>
+                <button class="mic-btn">
+                    <span class="material-symbols-outlined">mic</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <span class="material-symbols-outlined" style="cursor: pointer; color: #606060;">notifications</span>
+            <div class="avatar">A</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside>
+            <div class="sidebar-section">
+                <a href="index.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">home</span>
+                    Главная
+                </a>
+                <a href="success-stories.html" class="sidebar-link active">
+                    <span class="material-symbols-outlined">emoji_events</span>
+                    Истории успеха
+                </a>
+                <a href="leaderboard.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">military_tech</span>
+                    Список лидеров
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">Направления</div>
+                <a href="direction.html" class="sidebar-link dir-praktikuisya" data-direction="praktikuisya">
+                    <span class="material-symbols-outlined">model_training</span>
+                    Практикуйся
+                </a>
+                <a href="direction.html" class="sidebar-link dir-pobezhdaj" data-direction="pobezhdaj">
+                    <span class="material-symbols-outlined">workspace_premium</span>
+                    Побеждай
+                </a>
+                <a href="direction.html" class="sidebar-link dir-sport" data-direction="sport">
+                    <span class="material-symbols-outlined">sports_basketball</span>
+                    Спорт
+                </a>
+                <a href="direction.html" class="sidebar-link dir-vdohnovlyajsya" data-direction="vdohnovlyajsya">
+                    <span class="material-symbols-outlined">auto_awesome</span>
+                    Вдохновляйся
+                </a>
+                <a href="direction.html" class="sidebar-link dir-razvivajsya" data-direction="razvivajsya">
+                    <span class="material-symbols-outlined">lightbulb</span>
+                    Развивайся
+                </a>
+                <a href="direction.html" class="sidebar-link dir-bud-priznan" data-direction="bud-priznan">
+                    <span class="material-symbols-outlined">stars</span>
+                    Будь признан
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <a href="profile.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">account_circle</span>
+                    Профиль
+                </a>
+                <a href="applications.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">description</span>
+                    Заявки
+                </a>
+                <a href="projects.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">account_tree</span>
+                    Мои проекты
+                </a>
+                <a href="points-exchange.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">redeem</span>
+                    Обмен баллов
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">Навигатор</div>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">theater_comedy</span>
+                    Культурные мероприятия
+                </a>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">fitness_center</span>
+                    Спорт
+                </a>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">school</span>
+                    ДПО организации
+                </a>
+                <a href="DOP.html" class="sidebar-link">
+                    <span class="material-symbols-outlined">explore</span>
+                    Возможности самореализации
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">Другие возможности</div>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined" style="color: #00ff11;">smart_toy</span>
+                    Ai куратор
+                </a>
+                <a href="searching.html" class="sidebar-link">
+                    <span class="material-symbols-outlined" style="color: #0055ff;">group_add</span>
+                    Найти команду в проект
+                </a>
+                    <a href="searchnastavnik.html" class="sidebar-link">
+                    <span class="material-symbols-outlined" style="color: #ff00aa;">group_add</span>
+                    Найти наставника
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">settings</span>
+                    Настройки
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">help_outline</span>
+                    Справка
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">mail</span>
+                    Связаться с нами
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">settings</span>
+                    Настройки
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">help_outline</span>
+                    Справка
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="material-symbols-outlined">mail</span>
+                    Связаться с нами
+                </a>
+            </div>
+
+            <div class="sidebar-section no-border">
+                <div class="footer-links">
+                    <a href="#">О проекте</a>
+                    <a href="#">Направления</a>
+                    <a href="#">Связаться с нами</a>
+                    <a href="#">Организация</a>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Условия</a>
+                    <a href="#">Конфиденциальность</a>
+                </div>
+                <div class="copyright">
+                    © 2026 MolodezhBelogoria
+                </div>
+            </div>
+        </aside>
+
+        <main>
+            <div class="stories-container">
+                <h1 class="page-title">🌟 Истории успеха</h1>
+                <p class="page-subtitle">Вдохновляющие истории молодых людей Белгородской области, которые добились выдающихся результатов</p>
+                
+                <!-- Избранная история -->
+                <div class="featured-story">
+                    <div class="featured-content">
+                        <div class="featured-tag">История месяца</div>
+                        <h2 class="featured-title">От школьного проекта до федерального гранта</h2>
+                        <p class="featured-excerpt">Как студентка из Белгорода получила 500 000 рублей на реализацию социального проекта по поддержке одиноких пожилых людей.</p>
+                        
+                        <div class="featured-author">
+                            <div class="featured-avatar">МС</div>
+                            <div class="author-info">
+                                <h4>Мария Сидорова</h4>
+                                <div class="author-location">г. Старый Оскол, 25 лет</div>
+                            </div>
+                        </div>
+                        
+                        <button class="read-story-btn" onclick="window.location.href='story-detail.html'">
+                            Читать историю
+                            <span class="material-symbols-outlined">arrow_forward</span>
+                        </button>
+                    </div>
+                    <div class="featured-image"></div>
+                </div>
+                
+                <!-- Фильтры -->
+                <div class="stories-filters">
+                    <div class="story-filter active">Все истории</div>
+                    <div class="story-filter">Гранты</div>
+                    <div class="story-filter">Спорт</div>
+                    <div class="story-filter">Карьера</div>
+                    <div class="story-filter">Волонтерство</div>
+                    <div class="story-filter">Предпринимательство</div>
+                </div>
+                
+                <!-- Сетка историй -->
+                <div class="stories-grid">
+                    <!-- История 1 -->
+                    <div class="story-card" onclick="window.location.href='story-detail.html'">
+                        <div class="story-image">
+                            <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=1000&auto=format&fit=crop" alt="История успеха">
+                        </div>
+                        <div class="story-content">
+                            <div class="story-meta">
+                                <span class="story-category grant">Грант</span>
+                                <span class="story-date">15 марта 2026</span>
+                            </div>
+                            <h3 class="story-title">500 000 ₽ на социальный проект от Росмолодежи</h3>
+                            <p class="story-excerpt">Как наш участник разработал и успешно защитил проект по цифровизации школьных музеев, получив грантовую поддержку.</p>
+                            <div class="story-author">
+                                <div class="story-author-avatar">ДП</div>
+                                <div class="story-author-info">
+                                    <h4>Дмитрий Петров</h4>
+                                    <div class="story-author-location">г. Губкин</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- История 2 -->
+                    <div class="story-card" onclick="window.location.href='story-detail.html'">
+                        <div class="story-image">
+                            <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=1000&auto=format&fit=crop" alt="История успеха">
+                        </div>
+                        <div class="story-content">
+                            <div class="story-meta">
+                                <span class="story-category sport">Спорт</span>
+                                <span class="story-date">10 февраля 2026</span>
+                            </div>
+                            <h3 class="story-title">Золото на Всероссийской универсиаде по плаванию</h3>
+                            <p class="story-excerpt">История студента-пловца из Белгорода, который стал чемпионом России среди вузов и вошел в сборную страны.</p>
+                            <div class="story-author">
+                                <div class="story-author-avatar">АИ</div>
+                                <div class="story-author-info">
+                                    <h4>Алексей Иванов</h4>
+                                    <div class="story-author-location">г. Белгород</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- История 3 -->
+                    <div class="story-card" onclick="window.location.href='story-detail.html'">
+                        <div class="story-image">
+                            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1000&auto=format&fit=crop" alt="История успеха">
+                        </div>
+                        <div class="story-content">
+                            <div class="story-meta">
+                                <span class="story-category pobeda">Побеждай</span>
+                                <span class="story-date">28 января 2026</span>
+                            </div>
+                            <h3 class="story-title">Создание IT-стартапа сразу после университета</h3>
+                            <p class="story-excerpt">Выпускник БГТУ разработал мобильное приложение для обучения программированию, которое уже используют 50 000 человек.</p>
+                            <div class="story-author">
+                                <div class="story-author-avatar">ЕК</div>
+                                <div class="story-author-info">
+                                    <h4>Екатерина Ковалева</h4>
+                                    <div class="story-author-location">г. Белгород</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- История 4 -->
+                    <div class="story-card" onclick="window.location.href='story-detail.html'">
+                        <div class="story-image">
+                            <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=1000&auto=format&fit=crop" alt="История успеха">
+                        </div>
+                        <div class="story-content">
+                            <div class="story-meta">
+                                <span class="story-category">Волонтерство</span>
+                                <span class="story-date">15 января 2026</span>
+                            </div>
+                            <h3 class="story-title">Организация крупнейшего экомарафона в области</h3>
+                            <p class="story-excerpt">Студентка собрала команду волонтеров и провела экологический марафон с участием 500 человек, очистив 5 км береговой линии.</p>
+                            <div class="story-author">
+                                <div class="story-author-avatar">АН</div>
+                                <div class="story-author-info">
+                                    <h4>Анна Новикова</h4>
+                                    <div class="story-author-location">г. Шебекино</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- История 5 -->
+                    <div class="story-card" onclick="window.location.href='story-detail.html'">
+                        <div class="story-image">
+                            <img src="https://images.unsplash.com/photo-1533750349088-cd871a92f312?q=80&w=1000&auto=format&fit=crop" alt="История успеха">
+                        </div>
+                        <div class="story-content">
+                            <div class="story-meta">
+                                <span class="story-category">Искусство</span>
+                                <span class="story-date">5 января 2026</span>
+                            </div>
+                            <h3 class="story-title">Персональная выставка в Москве в 22 года</h3>
+                            <p class="story-excerpt">Молодой художник из Белгорода провел успешную выставку своих работ в столичной галерее, получив признание критиков.</p>
+                            <div class="story-author">
+                                <div class="story-author-avatar">ИС</div>
+                                <div class="story-author-info">
+                                    <h4>Игорь Семенов</h4>
+                                    <div class="story-author-location">г. Алексеевка</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- История 6 -->
+                    <div class="story-card" onclick="window.location.href='story-detail.html'">
+                        <div class="story-image">
+                            <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?q=80&w=1000&auto=format&fit=crop" alt="История успеха">
+                        </div>
+                        <div class="story-content">
+                            <div class="story-meta">
+                                <span class="story-category">Наука</span>
+                                <span class="story-date">20 декабря 2025</span>
+                            </div>
+                            <h3 class="story-title">Патент на изобретение в области робототехники</h3>
+                            <p class="story-excerpt">Студент-инженер разработал уникальный механизм для сельскохозяйственных роботов и получил патент на изобретение.</p>
+                            <div class="story-author">
+                                <div class="story-author-avatar">СК</div>
+                                <div class="story-author-info">
+                                    <h4>Сергей Козлов</h4>
+                                    <div class="story-author-location">г. Валуйки</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Кнопка "Загрузить еще" -->
+                <div class="load-more">
+                    <button class="load-more-btn">Показать еще истории</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Фильтрация историй
+        document.querySelectorAll('.story-filter').forEach(filter => {
+            filter.addEventListener('click', function() {
+                // Удаляем активный класс у всех фильтров
+                document.querySelectorAll('.story-filter').forEach(f => {
+                    f.classList.remove('active');
+                });
+                
+                // Добавляем активный класс текущему фильтру
+                this.classList.add('active');
+                
+                const category = this.textContent;
+                
+                // Здесь будет логика фильтрации историй
+                // В реальном приложении здесь был бы AJAX запрос
+            });
+        });
+        
+        // Кнопка "Загрузить еще"
+        document.querySelector('.load-more-btn').addEventListener('click', function() {
+            const storiesGrid = document.querySelector('.stories-grid');
+            
+            // Имитация загрузки новых историй
+            const newStories = [
+                {
+                    image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1000&auto=format&fit=crop',
+                    category: 'Предпринимательство',
+                    date: '10 декабря 2025',
+                    title: 'Открытие молодежного коворкинга в родном городе',
+                    excerpt: 'Как молодой предприниматель создал современное пространство для работы и творчества молодежи.',
+                    author: 'Ольга Морозова',
+                    location: 'г. Строитель'
+                },
+                {
+                    image: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=1000&auto=format&fit=crop',
+                    category: 'Образование',
+                    date: '5 декабря 2025',
+                    title: 'Создание бесплатных курсов для школьников',
+                    excerpt: 'Студентка организовала волонтерский проект по обучению школьников программированию.',
+                    author: 'Никита Волков',
+                    location: 'г. Новый Оскол'
+                }
+            ];
+            
+            newStories.forEach(story => {
+                const storyCard = document.createElement('div');
+                storyCard.className = 'story-card';
+                storyCard.onclick = () => window.location.href = 'story-detail.html';
+                
+                storyCard.innerHTML = `
+                    <div class="story-image">
+                        <img src="${story.image}" alt="История успеха">
+                    </div>
+                    <div class="story-content">
+                        <div class="story-meta">
+                            <span class="story-category">${story.category}</span>
+                            <span class="story-date">${story.date}</span>
+                        </div>
+                        <h3 class="story-title">${story.title}</h3>
+                        <p class="story-excerpt">${story.excerpt}</p>
+                        <div class="story-author">
+                            <div class="story-author-avatar">${story.author.split(' ').map(n => n[0]).join('')}</div>
+                            <div class="story-author-info">
+                                <h4>${story.author}</h4>
+                                <div class="story-author-location">${story.location}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                storiesGrid.appendChild(storyCard);
+            });
+            
+            this.textContent = 'Загружено';
+            this.disabled = true;
+        });
+    </script>
+</body>
+</html>
